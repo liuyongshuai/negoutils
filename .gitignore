@@ -1,0 +1,12 @@
+cover.out
+coverage.html
+output/
+vendor/
+textsearch
+.statsd
+.deploy
+logs
+.log
+.idea
+build
+test
