@@ -125,3 +125,14 @@ func FileModTime(filename string) (int64, error) {
 	}
 	return fileinfo.ModTime().Unix(), nil
 }
+
+//当前路径
+func CurPath() string {
+	path, _ := filepath.Abs(os.Args[0])
+	return path
+}
+
+//当前目录
+func CurDir() string {
+	return filepath.Dir(CurPath())
+}
