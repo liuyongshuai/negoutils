@@ -25,13 +25,25 @@ func Timestamp2Str(sec, nsec int64, format string) string {
 	return dt.Format(format)
 }
 
-func Strptime(dtStr, format string) (dt time.Time, err error) {
+func Str2Time(dtStr, format string) (dt time.Time, err error) {
 	var TimeFormat string
 	if format == "" {
 		format = TimeLayoutDateTime
 	}
 	dt, err = time.ParseInLocation(TimeFormat, dtStr, time.Local)
 	return
+}
+
+func Str2Timestamp(dtStr, format string) (ts int64, err error) {
+	var TimeFormat string
+	if format == "" {
+		format = TimeLayoutDateTime
+	}
+	dt, err := time.ParseInLocation(TimeFormat, dtStr, time.Local)
+	if err != nil {
+		return 0, err
+	}
+	return dt.Unix(), nil
 }
 
 func MonthStart() time.Time {
