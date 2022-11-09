@@ -14,3 +14,11 @@ func TestCurPath(t *testing.T) {
 	fmt.Println(CurPath())
 }
 
+func TestReadDirFiles(t *testing.T) {
+	d := "/home/liuyongshuai/editor.md"
+	flist, err := ReadDirFiles(d)
+	fmt.Println(err)
+	for _, f := range flist {
+		fmt.Println(f)
+	}
+}

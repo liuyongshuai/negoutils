@@ -8,9 +8,12 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
+	"github.com/liuyongshuai/negoutils/comutils"
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
+	"strings"
 	"time"
 )
 
@@ -78,4 +81,51 @@ func OpenNewFile(fileName, bakExt string, isBak bool) (fp *os.File, err error) {
 	}
 	fp, err = os.Create(fileName)
 	return
+}
+
+//读取目录下的所有文件
+func ReadDirFiles(dir string) (ret []string, err error) {
+	if !FileExists(dir) {
+		err = fmt.Errorf("dir %v not exists", dir)
+		return ret, err
+	}
+	dir = strings.TrimRight(dir, "/")
+
+	//开始读取目录
+	var dp *os.File
+	dp, err = os.Open(dir)
+	if err != nil {
+		return ret, err
+	}
+	if dp == nil {
+		err = fmt.Errorf("open %v failed", dir)
+		return ret, err
+	}
+
+	defer dp.Close()
+
+	var dlist []os.FileInfo
+	dlist, err = dp.Readdir(-1)
+	if err != nil {
+		return ret, err
+	}
+
+	//开始递归读取目录，忽略掉隐藏目录及文件
+	for _, v := range dlist {
+		if strings.HasPrefix(v.Name(), ".") {
+			continue
+		}
+		f := dir + "/" + v.Name()
+		if v.IsDir() {
+			tret, terr := ReadDirFiles(f)
+			if terr == nil && tret != nil && len(tret) > 0 {
+				ret = append(ret, tret...)
+			}
+		} else {
+			ret = append(ret, f)
+		}
+	}
+	ret = comutils.UniqueStrSlice(ret)
+	sort.Strings(ret)
+	return ret, nil
 }
