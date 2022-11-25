@@ -7,7 +7,7 @@ package comutils
 import (
 	"bytes"
 	"fmt"
-	"github.com/cespare/xxhash"
+	"github.com/cespare/xxhash/v2"
 	"github.com/liuyongshuai/negoutils/convertutils"
 	"math/rand"
 	"regexp"
