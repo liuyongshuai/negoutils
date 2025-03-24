@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
-	"github.com/cespare/xxhash"
+	"github.com/cespare/xxhash/v2"
 	"math"
 	"math/rand"
 	"regexp"
@@ -17,7 +17,7 @@ import (
 	"unicode"
 )
 
-//从字符串里提取单字，只要中文汉字
+// 从字符串里提取单字，只要中文汉字
 func ExtractCNWord(str string) (ret []string) {
 	ret = make([]string, 0)
 	for _, r := range str {
@@ -28,7 +28,7 @@ func ExtractCNWord(str string) (ret []string) {
 	return
 }
 
-//对比两个string切片，看内容是否一样
+// 对比两个string切片，看内容是否一样
 func CompareStringSlice(a []string, b []string) bool {
 	if len(a) != len(b) {
 		return false
@@ -43,7 +43,7 @@ func CompareStringSlice(a []string, b []string) bool {
 	return true
 }
 
-//是否全是汉字
+// 是否全是汉字
 func IsAllChinese(str string) bool {
 	if len(str) <= 0 {
 		return false
@@ -58,7 +58,7 @@ func IsAllChinese(str string) bool {
 	return ret
 }
 
-//是否为汉字、字母、数字
+// 是否为汉字、字母、数字
 func IsNormalStr(str string) bool {
 	if len(str) <= 0 {
 		return false
@@ -67,7 +67,7 @@ func IsNormalStr(str string) bool {
 	return reg.MatchString(str)
 }
 
-//半角字符转全角字符【处理搜索的query用】
+// 半角字符转全角字符【处理搜索的query用】
 func ToDBC(str string) string {
 	ret := ""
 	for _, r := range str {
@@ -82,7 +82,7 @@ func ToDBC(str string) string {
 	return ret
 }
 
-//全角字符转半角字符【处理搜索的query用】
+// 全角字符转半角字符【处理搜索的query用】
 func ToCBD(str string) string {
 	ret := ""
 	for _, r := range str {
@@ -99,14 +99,14 @@ func ToCBD(str string) string {
 	return ret
 }
 
-//md5转换
+// md5转换
 func MD5(str string) string {
 	data := []byte(str)
 	has := md5.Sum(data)
 	return fmt.Sprintf("%x", has)
 }
 
-//打乱一个字符串slice
+// 打乱一个字符串slice
 func StrSliceShuffle(slice []string) []string {
 	sl := len(slice)
 	if sl <= 0 {
@@ -122,7 +122,7 @@ func StrSliceShuffle(slice []string) []string {
 	return slice
 }
 
-//截取字符串
+// 截取字符串
 func Substr(str string, start int, end int) string {
 	rs := []rune(str)
 	length := len(rs)
@@ -142,7 +142,7 @@ func Substr(str string, start int, end int) string {
 	return string(rs[start : end+1])
 }
 
-//去重（不保证原顺序）
+// 去重（不保证原顺序）
 func UniqueStrSlice(slice []string) []string {
 	tmp := map[string]bool{}
 	for _, v := range slice {
@@ -155,7 +155,7 @@ func UniqueStrSlice(slice []string) []string {
 	return ret
 }
 
-//检查是否在slice里面
+// 检查是否在slice里面
 func InStrSlice(v string, sl []string) bool {
 	for _, vv := range sl {
 		if vv == v {
@@ -165,7 +165,7 @@ func InStrSlice(v string, sl []string) bool {
 	return false
 }
 
-//字符串hash为uint64
+// 字符串hash为uint64
 func StrHashSum64(str string) uint64 {
 	return xxhash.Sum64(StrToByte(str))
 }
@@ -177,7 +177,7 @@ var (
 	alphaNum3   = []byte(`0123456789`)
 )
 
-//生成一堆随机数
+// 生成一堆随机数
 func RandomStr(n int, alphabets ...byte) string {
 	if len(alphabets) == 0 {
 		alphabets = alphaNumAll
@@ -207,7 +207,7 @@ var base62CharToInt = []string{
 	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 var base62IntToChar = make(map[string]int)
 
-//base62转换
+// base62转换
 func Base62Encode(num int64) string {
 	baseStr := ""
 	for {
@@ -221,7 +221,7 @@ func Base62Encode(num int64) string {
 	return baseStr
 }
 
-//base62解码
+// base62解码
 func Base62Decode(b62Str string) int64 {
 	var rs int64 = 0
 	for i := 0; i < len(b62Str); i++ {
@@ -230,10 +230,10 @@ func Base62Decode(b62Str string) int64 {
 	return rs
 }
 
-//高仿PHP的 preg_replace_callback
-//pattern：正则表达式
-//originStr：要处理的字符串
-//fn：参数是字符串切片，0表示整个匹配的字符串，1表示正则里的第一个捕获项、2表示第二个、依次类推。。。。
+// 高仿PHP的 preg_replace_callback
+// pattern：正则表达式
+// originStr：要处理的字符串
+// fn：参数是字符串切片，0表示整个匹配的字符串，1表示正则里的第一个捕获项、2表示第二个、依次类推。。。。
 func PregReplaceCallback(pattern, originStr string, fn func([]string) string) (string, error) {
 	reg, err := regexp.Compile(pattern)
 	if err != nil {
@@ -281,7 +281,7 @@ func PregReplaceCallback(pattern, originStr string, fn func([]string) string) (s
 	return buf.String(), nil
 }
 
-//判断字符串是否全为数字
+// 判断字符串是否全为数字
 func IsAllNumber(str string) bool {
 	if len(str) <= 0 {
 		return false
@@ -292,8 +292,8 @@ func IsAllNumber(str string) bool {
 	return true
 }
 
-//解析字符串，高仿PHP的http://php.net/manual/zh/function.parse-str.php
-//"first=value&arr[]=foo+bar&arr[]=baz";
+// 解析字符串，高仿PHP的http://php.net/manual/zh/function.parse-str.php
+// "first=value&arr[]=foo+bar&arr[]=baz";
 func ParseStr(str string) (ret map[string][]ElemType) {
 	ret = make(map[string][]ElemType)
 	tmpRet := map[string]*[]ElemType{}
@@ -333,7 +333,7 @@ func ParseStr(str string) (ret map[string][]ElemType) {
 	return
 }
 
-//打乱一个字符串
+// 打乱一个字符串
 func StrShuffle(str string) string {
 	rs := []rune(str)
 	sliceLen := len(rs)
