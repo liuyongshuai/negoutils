@@ -72,7 +72,7 @@ func ToDBC(str string) string {
 	ret := ""
 	for _, r := range str {
 		if r == 32 {
-			ret += string(12288)
+			ret += string(rune(12288))
 		} else if r < 127 {
 			ret += string(r + 65248)
 		} else {
