@@ -3,7 +3,7 @@
  * @package     mysql
  * @date        2018-01-25 19:19
  */
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-//存储MySQL的连接账号信息
+// 存储MySQL的连接账号信息
 type MySQLConf struct {
 	Host            string        //连接地址
 	Port            uint16        //端口号，默认3306
@@ -41,67 +41,67 @@ func MakeMySQLConf() MySQLConf {
 	}
 }
 
-//设置连接地址
+// 设置连接地址
 func (mc MySQLConf) SetHost(h string) MySQLConf {
 	mc.Host = h
 	return mc
 }
 
-//设置端口号
+// 设置端口号
 func (mc MySQLConf) SetPort(p uint16) MySQLConf {
 	mc.Port = p
 	return mc
 }
 
-//设置用户名
+// 设置用户名
 func (mc MySQLConf) SetUser(u string) MySQLConf {
 	mc.User = u
 	return mc
 }
 
-//设置密码
+// 设置密码
 func (mc MySQLConf) SetPasswd(p string) MySQLConf {
 	mc.Passwd = p
 	return mc
 }
 
-//设置数据库名称
+// 设置数据库名称
 func (mc MySQLConf) SetDbName(d string) MySQLConf {
 	mc.DbName = d
 	return mc
 }
 
-//设置连接时的字符编码
+// 设置连接时的字符编码
 func (mc MySQLConf) SetCharset(c string) MySQLConf {
 	mc.Charset = c
 	return mc
 }
 
-//设置连接时的超时时间
+// 设置连接时的超时时间
 func (mc MySQLConf) SetTimeout(t time.Duration) MySQLConf {
 	mc.Timeout = t
 	return mc
 }
 
-//设置是否自动提交
+// 设置是否自动提交
 func (mc MySQLConf) SetAutoCommit(b bool) MySQLConf {
 	mc.AutoCommit = b
 	return mc
 }
 
-//设置允许的最多多少个空闲连接
+// 设置允许的最多多少个空闲连接
 func (mc MySQLConf) SetMaxIdleConns(c int) MySQLConf {
 	mc.MaxIdleConns = c
 	return mc
 }
 
-//设置最多允许打开的连接数
+// 设置最多允许打开的连接数
 func (mc MySQLConf) SetMaxOpenConns(c int) MySQLConf {
 	mc.MaxOpenConns = c
 	return mc
 }
 
-//设置每个连接最长的生存周期
+// 设置每个连接最长的生存周期
 func (mc MySQLConf) SetConnMaxLiftTime(t time.Duration) MySQLConf {
 	mc.ConnMaxLiftTime = t
 	return mc
@@ -126,7 +126,7 @@ func init() {
 	sqlTokenMap["find"] = "FIND_IN_SET"
 }
 
-//检测分隔符是否合法
+// 检测分隔符是否合法
 func checkDelimiter(delim string) bool {
 	for _, a := range delimiter {
 		if a == delim {
@@ -136,7 +136,7 @@ func checkDelimiter(delim string) bool {
 	return false
 }
 
-//条件连接符是否合法
+// 条件连接符是否合法
 func checkSQLToken(t string) bool {
 	for k := range sqlTokenMap {
 		if k == t {
@@ -258,7 +258,7 @@ func FormatCond(cond map[string]interface{}, delim string) (sqlCond string, para
 	return sqlCond, param
 }
 
-//转换查询SQL用的参数
+// 转换查询SQL用的参数
 func ConvertArgs(param []ElemType) []interface{} {
 	args := make([]interface{}, len(param))
 	for i := range param {
@@ -267,7 +267,7 @@ func ConvertArgs(param []ElemType) []interface{} {
 	return args
 }
 
-//将[]byte根据MySQL的字段类型转为相应的值
+// 将[]byte根据MySQL的字段类型转为相应的值
 func convertMySQLType(b []byte, t *sql.ColumnType) interface{} {
 	buf := bytes.NewBuffer(b)
 	tstr := buf.String()
@@ -306,7 +306,7 @@ func convertMySQLType(b []byte, t *sql.ColumnType) interface{} {
 	return tstr
 }
 
-//提取字段
+// 提取字段
 func filterTableFields(fields ...string) string {
 	f := "*"
 	if len(fields) > 0 {

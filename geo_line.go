@@ -4,25 +4,25 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-09-30 17:12
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"
 	"math"
 )
 
-//构造直线
+// 构造直线
 func MakeGeoLine(p1 GeoPoint, p2 GeoPoint) GeoLine {
 	return GeoLine{Point1: p1, Point2: p2}
 }
 
-//一条直接
+// 一条直接
 type GeoLine struct {
 	Point1 GeoPoint `json:"point1"` //起点
 	Point2 GeoPoint `json:"point2"` //终点
 }
 
-//跟另一直线是否相同
+// 跟另一直线是否相同
 func (gl *GeoLine) IsEqual(line GeoLine) bool {
 	if line.Point1.IsEqual(gl.Point1) && line.Point2.IsEqual(gl.Point2) {
 		return true
@@ -33,17 +33,17 @@ func (gl *GeoLine) IsEqual(line GeoLine) bool {
 	return false
 }
 
-//直线的长度
+// 直线的长度
 func (gl *GeoLine) Length() float64 {
 	return EarthDistance(gl.Point1, gl.Point2)
 }
 
-//直线的长度
+// 直线的长度
 func (gl *GeoLine) FormatStr() string {
 	return fmt.Sprintf("%s-%s", gl.Point1.FormatStr(), gl.Point2.FormatStr())
 }
 
-//获取直线的最小外包矩形，如果是条平行线或竖线的话，可能会有问题
+// 获取直线的最小外包矩形，如果是条平行线或竖线的话，可能会有问题
 func (gl *GeoLine) GetBoundsRect() GeoRectangle {
 	return GeoRectangle{
 		MaxLat: math.Max(gl.Point2.Lat, gl.Point1.Lat),
@@ -53,9 +53,9 @@ func (gl *GeoLine) GetBoundsRect() GeoRectangle {
 	}
 }
 
-//是否包含某个点，基本思路：
-//点为Q，线段为P1P2，判断点Q在线段上的依据是：(Q-P1)×(P2-P1)=0
-//且Q在以P1P2为对角定点的矩形内
+// 是否包含某个点，基本思路：
+// 点为Q，线段为P1P2，判断点Q在线段上的依据是：(Q-P1)×(P2-P1)=0
+// 且Q在以P1P2为对角定点的矩形内
 func (gl *GeoLine) IsContainPoint(p GeoPoint) bool {
 	rect := gl.GetBoundsRect()
 	if !rect.IsPointInRect(p) {
@@ -70,7 +70,7 @@ func (gl *GeoLine) IsContainPoint(p GeoPoint) bool {
 	return cross == 0
 }
 
-//两直线间的夹角，用向量来解决，角度有可能为负
+// 两直线间的夹角，用向量来解决，角度有可能为负
 func (gl *GeoLine) AngleWithLine(l GeoLine) float64 {
 	r1 := VectorDifference(l.Point1, l.Point2)
 	r2 := VectorDifference(gl.Point1, gl.Point2)
@@ -84,18 +84,20 @@ func (gl *GeoLine) AngleWithLine(l GeoLine) float64 {
 	return angle
 }
 
-//与另一条直线是否相交、平行
+// 与另一条直线是否相交、平行
 func (gl *GeoLine) IsIntersectWithLine(line GeoLine) (isIntersect bool, isParallel bool) {
 	_, isParallel, isIntersect = gl.GetIntersectPoint(line)
 	return
 }
 
-//两直线相交的判断，考虑了部分共线的情况
-//参考：https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+// 两直线相交的判断，考虑了部分共线的情况
+// 参考：https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+//
 //	interPoints：是所有的交点，如果两线段有部分重合，此时会有两个交点
 //	isParallel：两直线是否平行
-//若len(interPoints)==1且isParallel=true表示平行且端点重合
-//若len(interPoints)==2且isParallel=true表示两线段部分重合
+//
+// 若len(interPoints)==1且isParallel=true表示平行且端点重合
+// 若len(interPoints)==2且isParallel=true表示两线段部分重合
 func (gl *GeoLine) GetIntersectPoints(line GeoLine) (interPoints []GeoPoint, isParallel bool) {
 	//如果其中一线是点
 	if gl.Point1.IsEqual(gl.Point2) {
@@ -178,9 +180,9 @@ func (gl *GeoLine) GetIntersectPoints(line GeoLine) (interPoints []GeoPoint, isP
 	return
 }
 
-//【在处理线段共线上有点问题】求两直线交点的坐标
-//参考：https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-//返回值：交点、是否平行、是否相交
+// 【在处理线段共线上有点问题】求两直线交点的坐标
+// 参考：https://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+// 返回值：交点、是否平行、是否相交
 func (gl *GeoLine) GetIntersectPoint(line GeoLine) (interPoint GeoPoint, isParallel bool, isIntersect bool) {
 	ps, para := gl.GetIntersectPoints(line)
 	isParallel = para
@@ -191,7 +193,7 @@ func (gl *GeoLine) GetIntersectPoint(line GeoLine) (interPoint GeoPoint, isParal
 	return
 }
 
-//拷贝【看起来没啥用】
+// 拷贝【看起来没啥用】
 func (gl *GeoLine) Clone() GeoLine {
 	return GeoLine{
 		Point1: gl.Point1.Clone(),

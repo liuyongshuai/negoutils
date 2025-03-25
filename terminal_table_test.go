@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-27 20:14
 
-package goUtils
+package negoutils
 
 import (
 	"fmt"

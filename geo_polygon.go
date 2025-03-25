@@ -4,13 +4,13 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-05-29 18:12
  */
-package goUtils
+package negoutils
 
 import (
 	"math"
 )
 
-//根据经纬度字符串构造多边形，字符串格式"lat,lng",根据ES对经纬度串的要求来的
+// 根据经纬度字符串构造多边形，字符串格式"lat,lng",根据ES对经纬度串的要求来的
 func MakeGeoPolygonByStr(locs []string) GeoPolygon {
 	var points []GeoPoint
 	for _, loc := range locs {
@@ -20,7 +20,7 @@ func MakeGeoPolygonByStr(locs []string) GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//构造多边形
+// 构造多边形
 func MakeGeoPolygon(points []GeoPoint) GeoPolygon {
 	pl := len(points)
 	if pl >= 3 {
@@ -32,7 +32,7 @@ func MakeGeoPolygon(points []GeoPoint) GeoPolygon {
 	return ret
 }
 
-//一个多边形
+// 一个多边形
 type GeoPolygon struct {
 	Points      []GeoPoint   `json:"points"`       //一堆顶点，必须是首尾相连有序的
 	Borders     []GeoLine    `json:"borders"`      //所有的边
@@ -40,12 +40,12 @@ type GeoPolygon struct {
 	GeoHashType int          `json:"geohash_type"` //切格子的类型
 }
 
-//获取所有的顶点
+// 获取所有的顶点
 func (gp *GeoPolygon) GetPoints() []GeoPoint {
 	return gp.Points
 }
 
-//设置切格子的方式
+// 设置切格子的方式
 func (gp *GeoPolygon) SetGeoHashType(gtype int) {
 	if gtype != GEOHASH_TYPE_BITS && gtype != GEOHASH_TYPE_NORMAL {
 		return
@@ -53,7 +53,7 @@ func (gp *GeoPolygon) SetGeoHashType(gtype int) {
 	gp.GeoHashType = gtype
 }
 
-//是否有边相交（相怜的不算）
+// 是否有边相交（相怜的不算）
 func (gp *GeoPolygon) IsBorderInterect() bool {
 	if !gp.Check() {
 		return false
@@ -76,7 +76,7 @@ func (gp *GeoPolygon) IsBorderInterect() bool {
 	return false
 }
 
-//多边形的所有的边
+// 多边形的所有的边
 func (gp *GeoPolygon) GetPolygonBorders() (ret []GeoLine) {
 	if !gp.Check() {
 		return
@@ -97,12 +97,12 @@ func (gp *GeoPolygon) GetPolygonBorders() (ret []GeoLine) {
 	return
 }
 
-//添加点
+// 添加点
 func (gp *GeoPolygon) AddPoint(p GeoPoint) {
 	gp.Points = append(gp.Points, p)
 }
 
-//将多边形处理成字符串的切片格式
+// 将多边形处理成字符串的切片格式
 func (gp *GeoPolygon) FormatStringArray() (ret []string) {
 	for _, p := range gp.Points {
 		ret = append(ret, p.FormatStr())
@@ -110,7 +110,7 @@ func (gp *GeoPolygon) FormatStringArray() (ret []string) {
 	return
 }
 
-//将多边形处理成字符串的切片格式
+// 将多边形处理成字符串的切片格式
 func (gp *GeoPolygon) FormatStringMultiArray() (ret [][]string) {
 	var tmp []string
 	for _, p := range gp.Points {
@@ -120,7 +120,7 @@ func (gp *GeoPolygon) FormatStringMultiArray() (ret [][]string) {
 	return
 }
 
-//判断是否是合法的多边形
+// 判断是否是合法的多边形
 func (gp *GeoPolygon) Check() bool {
 	if len(gp.Points) < 3 {
 		return false
@@ -139,7 +139,7 @@ func (gp *GeoPolygon) Check() bool {
 	return true
 }
 
-//获取最小外包矩形
+// 获取最小外包矩形
 func (gp *GeoPolygon) GetBoundsRect() GeoRectangle {
 	if gp.Rect.Width() > 0 || gp.Rect.Height() > 0 {
 		return gp.Rect
@@ -159,11 +159,11 @@ func (gp *GeoPolygon) GetBoundsRect() GeoRectangle {
 	return rect
 }
 
-//判断点是否在多边形内部，此处使用最简单的射线法判断
-//边数较多时性能不高，只适合在写入时小批量判断
-//计算射线与多边形各边的交点，如果是偶数，则点在多边形外，否则在多边形内。
-//还会考虑一些特殊情况，如点在多边形顶点上，点在多边形边上等特殊情况。
-//参考【有BUG】：http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils.js
+// 判断点是否在多边形内部，此处使用最简单的射线法判断
+// 边数较多时性能不高，只适合在写入时小批量判断
+// 计算射线与多边形各边的交点，如果是偶数，则点在多边形外，否则在多边形内。
+// 还会考虑一些特殊情况，如点在多边形顶点上，点在多边形边上等特殊情况。
+// 参考【有BUG】：http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils.js
 func (gp *GeoPolygon) IsPointInPolygon(p GeoPoint) bool {
 	if !p.Check() || !gp.Check() {
 		return false
@@ -259,7 +259,7 @@ func (gp *GeoPolygon) IsPointInPolygon(p GeoPoint) bool {
 	}
 }
 
-//对多边形暴力切格子，笨而慢，但比较完备，只做double check用！
+// 对多边形暴力切格子，笨而慢，但比较完备，只做double check用！
 func (gp *GeoPolygon) ViolentSplitGeoHashRect(precision int) (inRect, interRect []string) {
 	if !gp.Check() {
 		return
@@ -388,7 +388,8 @@ func (gp *GeoPolygon) ViolentSplitGeoHashRect(precision int) (inRect, interRect 
 	return
 }
 
-/**
+/*
+*
 用类似射线法的思想去将多边形切成多个小格子
 */
 func (gp *GeoPolygon) RaySplitGeoHashRect(stp int) (inRect, interRect []string) {
@@ -580,7 +581,7 @@ func (gp *GeoPolygon) RaySplitGeoHashRect(stp int) (inRect, interRect []string) 
 	return
 }
 
-//切格子开始遍历时需要的信息
+// 切格子开始遍历时需要的信息
 type splitRectBaseInfo struct {
 	basePoint        GeoPoint
 	verNum, horiNum  int
@@ -589,7 +590,7 @@ type splitRectBaseInfo struct {
 	interRect        []string
 }
 
-//获取切格子的基准点及水平方向、垂直方向上的格子个数
+// 获取切格子的基准点及水平方向、垂直方向上的格子个数
 func (gp *GeoPolygon) getSplitGeoHashRect(precision int) (ret splitRectBaseInfo) {
 	//先提取最小外包矩形，并取取四个点的geohash格子
 	minRect := gp.GetBoundsRect()
@@ -651,7 +652,7 @@ func (gp *GeoPolygon) getSplitGeoHashRect(precision int) (ret splitRectBaseInfo)
 	return
 }
 
-//一条横线和多边形的交点，与横线部分重合的不算、交点在多边形顶点的时位于直接上方的不算
+// 一条横线和多边形的交点，与横线部分重合的不算、交点在多边形顶点的时位于直接上方的不算
 func (gp *GeoPolygon) interPointsWithHorizontalLine(line GeoLine) (ret map[GeoLine]GeoPoint) {
 	ret = map[GeoLine]GeoPoint{}
 	maxLng := math.Max(line.Point1.Lng, line.Point2.Lng)
@@ -695,7 +696,7 @@ func (gp *GeoPolygon) interPointsWithHorizontalLine(line GeoLine) (ret map[GeoLi
 	return
 }
 
-//一条垂线和多边形的交点
+// 一条垂线和多边形的交点
 func (gp *GeoPolygon) interPointsWithVertialLine(line GeoLine) (ret map[GeoLine]GeoPoint) {
 	ret = map[GeoLine]GeoPoint{}
 	lineLng := line.Point2.Lng
@@ -721,7 +722,7 @@ func (gp *GeoPolygon) interPointsWithVertialLine(line GeoLine) (ret map[GeoLine]
 	return
 }
 
-//求两个多边形的并集，返回多个多边形
+// 求两个多边形的并集，返回多个多边形
 func (gp *GeoPolygon) UnionWithPoly(poly GeoPolygon) []GeoPolygon {
 	pbo := polyBoolOperation{
 		subject:  *gp,
@@ -731,7 +732,7 @@ func (gp *GeoPolygon) UnionWithPoly(poly GeoPolygon) []GeoPolygon {
 	return ret
 }
 
-//求两个多边形的交集，返回多个多边形
+// 求两个多边形的交集，返回多个多边形
 func (gp *GeoPolygon) IntersectionWithPoly(poly GeoPolygon) []GeoPolygon {
 	pbo := polyBoolOperation{
 		subject:  *gp,
@@ -741,7 +742,7 @@ func (gp *GeoPolygon) IntersectionWithPoly(poly GeoPolygon) []GeoPolygon {
 	return ret
 }
 
-//求两个多边形的差集，在当前多边形且不在参数多边形里面的
+// 求两个多边形的差集，在当前多边形且不在参数多边形里面的
 func (gp *GeoPolygon) DifferenceWithPoly(poly GeoPolygon) []GeoPolygon {
 	pbo := polyBoolOperation{
 		subject:  *gp,
@@ -751,7 +752,7 @@ func (gp *GeoPolygon) DifferenceWithPoly(poly GeoPolygon) []GeoPolygon {
 	return ret
 }
 
-//拷贝【看起来没啥用】
+// 拷贝【看起来没啥用】
 func (gp *GeoPolygon) Clone() GeoPolygon {
 	var points []GeoPoint
 	var borders []GeoLine

@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-05-23 15:37
  */
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -78,7 +78,7 @@ func TestGeoPolygon_SplitGeoHashRect(t *testing.T) {
 	testEnd()
 }
 
-//凸多边形：http://10.96.112.48/polygon1.html
+// 凸多边形：http://10.96.112.48/polygon1.html
 func GetTestPolygon1() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.385297, Lat: 39.993252},
@@ -93,7 +93,7 @@ func GetTestPolygon1() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon2.html
+// http://10.96.112.48/polygon2.html
 func getPolygon2() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.399669, Lat: 40.004307},
@@ -110,7 +110,7 @@ func getPolygon2() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon3.html
+// http://10.96.112.48/polygon3.html
 func getPolygon3() GeoPolygon {
 	p := MakeGeoPoint(39.923664, 116.403424)
 	var points []GeoPoint
@@ -128,7 +128,7 @@ func getPolygon3() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//http://10.96.112.48/polygon4.html
+// http://10.96.112.48/polygon4.html
 func getPolygon4() GeoPolygon {
 	//{39.869384765625 116.279296875 39.9957275390625 116.455078125}
 	polygon := MakeGeoPolygon([]GeoPoint{
@@ -141,7 +141,7 @@ func getPolygon4() GeoPolygon {
 
 }
 
-//http://10.96.112.48/polygon5.html
+// http://10.96.112.48/polygon5.html
 func getPolygon5() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.315013, Lat: 39.969147},
@@ -162,7 +162,7 @@ func getPolygon5() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon6.html
+// http://10.96.112.48/polygon6.html
 func getPolygon6() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.314438, Lat: 39.968926},
@@ -190,7 +190,7 @@ func getPolygon6() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon7.html
+// http://10.96.112.48/polygon7.html
 func getPolygon7() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.30797, Lat: 39.991926},
@@ -217,7 +217,7 @@ func getPolygon7() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon8.html
+// http://10.96.112.48/polygon8.html
 func getPolygon8() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.328667, Lat: 39.972907},
@@ -233,7 +233,7 @@ func getPolygon8() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon9.html
+// http://10.96.112.48/polygon9.html
 func getPolygon9() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.403685, Lat: 39.909262},
@@ -244,7 +244,7 @@ func getPolygon9() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon10.html
+// http://10.96.112.48/polygon10.html
 func getPolygon10() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.363126, Lat: 39.913468},
@@ -255,7 +255,7 @@ func getPolygon10() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon11.html
+// http://10.96.112.48/polygon11.html
 func getPolygon11() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.211097, Lat: 39.913607},
@@ -265,7 +265,7 @@ func getPolygon11() GeoPolygon {
 	return polygon
 }
 
-//http://10.96.112.48/polygon12.html
+// http://10.96.112.48/polygon12.html
 func getPolygon12() GeoPolygon {
 	polygon := MakeGeoPolygon([]GeoPoint{
 		{Lng: 116.305383, Lat: 39.991262},
@@ -280,7 +280,7 @@ func getPolygon12() GeoPolygon {
 	return polygon
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon1() GeoPolygon {
 	stp := customDeliveryGeoHashPrecision
 	var points []GeoPoint
@@ -309,7 +309,7 @@ func getSpecialPolygon1() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon2() GeoPolygon {
 	stp := customDeliveryGeoHashPrecision
 	var points []GeoPoint
@@ -327,7 +327,7 @@ func getSpecialPolygon2() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon3() GeoPolygon {
 	stp := customDeliveryGeoHashPrecision
 	var points []GeoPoint
@@ -344,7 +344,7 @@ func getSpecialPolygon3() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon4() GeoPolygon {
 	stp := customDeliveryGeoHashPrecision
 	var points []GeoPoint
@@ -376,7 +376,7 @@ func getSpecialPolygon4() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon5() GeoPolygon {
 	stp := customDeliveryGeoHashPrecision
 	var points []GeoPoint
@@ -397,7 +397,7 @@ func getSpecialPolygon5() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//切多边形的特殊case
+// 切多边形的特殊case
 func getSpecialPolygon6() GeoPolygon {
 	var points []GeoPoint
 	var stp uint8 = 14
@@ -418,7 +418,7 @@ func getSpecialPolygon6() GeoPolygon {
 	return MakeGeoPolygon(points)
 }
 
-//将多边形及切格子后的画在地图上
+// 将多边形及切格子后的画在地图上
 func splitGeoHashRect(
 	polygon GeoPolygon, //多边形
 	htmlName string, //生成的html文件识别名称
@@ -480,7 +480,7 @@ func pT(st, et int64) float64 {
 	return ret
 }
 
-//在地图上画格子及多边形
+// 在地图上画格子及多边形
 func drawPolygonAndGridInMap(
 	htmlName string,
 	midPoint GeoPoint,
@@ -525,7 +525,7 @@ func drawPolygonAndGridInMap(
 	}
 }
 
-//画多边形的模板
+// 画多边形的模板
 var geoPolygonHtmlTemplate = `
 <html>
 	<head>
@@ -613,7 +613,7 @@ func TestGeoRectangle_GetRandomGeoPoint(t *testing.T) {
 	drawRectangleAndPointsInMap("TestGeoRectangle_GetRandomGeoPoint", 14, testRect, randomPoints)
 }
 
-//在地图上画格子及多边形
+// 在地图上画格子及多边形
 func drawRectangleAndPointsInMap(
 	htmlName string, //生成的html文件识别名称
 	level int, //百度地图显示的级别
@@ -658,7 +658,7 @@ func drawRectangleAndPointsInMap(
 	}
 }
 
-//画多边形的模板
+// 画多边形的模板
 var geoRectanglePointHtmlTemplate = `
 <html>
 	<head>
@@ -727,7 +727,7 @@ func TestGeoRectangle_DrawGeoPointAndPolygon(t *testing.T) {
 	drawPolygonAndPointsInMap("TestGeoRectangle_DrawGeoPointAndPolygon", 14, testRect, randomPoints)
 }
 
-//在地图上画格子及多边形
+// 在地图上画格子及多边形
 func drawPolygonAndPointsInMap(
 	htmlName string, //生成的html文件识别名称
 	level int, //百度地图显示的级别

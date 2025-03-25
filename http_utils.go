@@ -1,14 +1,14 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-22 18:37
 
-package goUtils
+package negoutils
 
 import (
 	"net/url"
 	"strings"
 )
 
-//对原始cookie进行五马分尸
+// 对原始cookie进行五马分尸
 func SplitRawCookie(ck string) (ret map[string]string) {
 	ret = make(map[string]string)
 	ck = strings.TrimSpace(ck)
@@ -35,7 +35,7 @@ func SplitRawCookie(ck string) (ret map[string]string) {
 	return
 }
 
-//合并cookie
+// 合并cookie
 func JoinRawCookie(ck map[string]string) (ret string) {
 	if ck == nil {
 		return ""
@@ -61,7 +61,7 @@ func UrlDecode(str string) (string, error) {
 	return url.QueryUnescape(str)
 }
 
-//高仿PHP的rawurlencode()函数，在调M端的接口时有参数要求这么处理
+// 高仿PHP的rawurlencode()函数，在调M端的接口时有参数要求这么处理
 func RawUrlEncode(str string) string {
 	return strings.Replace(url.QueryEscape(str), "+", "%20", -1)
 }

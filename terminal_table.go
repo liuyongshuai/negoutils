@@ -3,7 +3,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-27 19:02
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -40,7 +40,7 @@ type TerminalTable struct {
 	allTableAllowWidth int //表格允许的最大宽度
 }
 
-//添加表头数据
+// 添加表头数据
 func (t *TerminalTable) SetHeader(header []string) *TerminalTable {
 	if len(header) > t.maxColumnNum {
 		t.maxColumnNum = len(header)
@@ -51,7 +51,7 @@ func (t *TerminalTable) SetHeader(header []string) *TerminalTable {
 	return t
 }
 
-//添加表头字体颜色
+// 添加表头字体颜色
 func (t *TerminalTable) SetHeaderFontColor(color ColorType) *TerminalTable {
 	colorFunc, ok := GetColorFunc(color)
 	if ok {
@@ -60,7 +60,7 @@ func (t *TerminalTable) SetHeaderFontColor(color ColorType) *TerminalTable {
 	return t
 }
 
-//添加一行数据
+// 添加一行数据
 func (t *TerminalTable) AddRow(row []string) *TerminalTable {
 	t.rawRowData = append(t.rawRowData, row)
 	if len(row) > t.maxColumnNum {
@@ -69,7 +69,7 @@ func (t *TerminalTable) AddRow(row []string) *TerminalTable {
 	return t
 }
 
-//添加许多行数据
+// 添加许多行数据
 func (t *TerminalTable) AddRows(rows [][]string) *TerminalTable {
 	for _, row := range rows {
 		if len(row) > t.maxColumnNum {
@@ -80,7 +80,7 @@ func (t *TerminalTable) AddRows(rows [][]string) *TerminalTable {
 	return t
 }
 
-//添加行内容字体颜色
+// 添加行内容字体颜色
 func (t *TerminalTable) SetRowFontColor(color ColorType) *TerminalTable {
 	colorFunc, ok := GetColorFunc(color)
 	if ok {
@@ -89,7 +89,7 @@ func (t *TerminalTable) SetRowFontColor(color ColorType) *TerminalTable {
 	return t
 }
 
-//添加边框颜色
+// 添加边框颜色
 func (t *TerminalTable) SetBorderFontColor(color ColorType) *TerminalTable {
 	colorFunc, ok := GetColorFunc(color)
 	if ok {
@@ -98,7 +98,7 @@ func (t *TerminalTable) SetBorderFontColor(color ColorType) *TerminalTable {
 	return t
 }
 
-//开始返回表格数据
+// 开始返回表格数据
 func (t *TerminalTable) Render() string {
 	headerLen := len(t.rawHeaderData)
 	rowLen := len(t.rawRowData)
@@ -143,14 +143,14 @@ const (
 	rowTypeData
 )
 
-//一行数据，包含多个列
+// 一行数据，包含多个列
 type terminalTableRow struct {
 	lineNum  int     //本行各个小格子的数据行数，本行所有列的行数都是一样的
 	rowType  rowType //本行数据的类型，是表头还是数据内容
 	cellList []*terminalTableCell
 }
 
-//一个小格子里的数据
+// 一个小格子里的数据
 type terminalTableCell struct {
 	columnNo    int      //第几列
 	maxWidth    int      //宽度
@@ -167,7 +167,7 @@ var (
 	)
 )
 
-//计算属性
+// 计算属性
 func (t *TerminalTable) prepareSomething() {
 	if len(t.rawHeaderData) <= 0 && len(t.rawRowData) <= 0 {
 		return
@@ -221,7 +221,7 @@ func (t *TerminalTable) prepareSomething() {
 	}
 }
 
-//计算各列的最大长度
+// 计算各列的最大长度
 func (t *TerminalTable) getMaxColumnWidths() {
 	t.allTableAllowWidth = ScreenWidth - t.maxColumnNum*4
 	t.maxColumnWidth = make([]int, t.maxColumnNum)
@@ -273,7 +273,7 @@ func (t *TerminalTable) getMaxColumnWidths() {
 	}
 }
 
-//表头字体获取
+// 表头字体获取
 func (t *TerminalTable) headerStr(str string) string {
 	if t.headerFontColorFunc != nil {
 		return t.headerFontColorFunc(str)
@@ -281,7 +281,7 @@ func (t *TerminalTable) headerStr(str string) string {
 	return Yellow(str)
 }
 
-//边框字体获取
+// 边框字体获取
 func (t *TerminalTable) borderStr(str string) string {
 	if t.borderColorFunc != nil {
 		return t.borderColorFunc(str)
@@ -289,7 +289,7 @@ func (t *TerminalTable) borderStr(str string) string {
 	return str
 }
 
-//行内容字体获取
+// 行内容字体获取
 func (t *TerminalTable) rowStr(str string) string {
 	if t.rowFontColorFunc != nil {
 		return t.rowFontColorFunc(str)
@@ -297,7 +297,7 @@ func (t *TerminalTable) rowStr(str string) string {
 	return str
 }
 
-//生成一行数据的格式
+// 生成一行数据的格式
 func (t *TerminalTable) renderSingleRow(row *terminalTableRow) string {
 	if row == nil || len(row.cellList) <= 0 {
 		return ""
@@ -331,7 +331,7 @@ func (t *TerminalTable) renderSingleRow(row *terminalTableRow) string {
 	return buf.String()
 }
 
-//将一行数据折行，并返回最大行数，主要策略是每次都将最长的行折半，一直折到所有行的长度小于屏幕长度
+// 将一行数据折行，并返回最大行数，主要策略是每次都将最长的行折半，一直折到所有行的长度小于屏幕长度
 func (t *TerminalTable) wrapTableRows(rawRow []string) (retRow *terminalTableRow) {
 	if len(rawRow) <= 0 {
 		return nil

@@ -4,7 +4,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-08 13:37
 
-package goUtils
+package negoutils
 
 import (
 	"context"
@@ -18,7 +18,7 @@ const (
 	DING_TALK_API_HOST = "https://oapi.dingtalk.com/robot/send?access_token=%s"
 )
 
-//构造
+// 构造
 func NewDingTalkApi(accessToken string, t string) *DingTalkApi {
 	ret := &DingTalkApi{
 		AccessToken: accessToken,
@@ -33,25 +33,25 @@ func NewDingTalkApi(accessToken string, t string) *DingTalkApi {
 	return ret
 }
 
-//api
+// api
 type DingTalkApi struct {
 	AccessToken string          //access_token
 	Msg         DingTalkMsgInfo //消息
 }
 
-//at所有人
+// at所有人
 func (dt *DingTalkApi) IsAtAll(b bool) *DingTalkApi {
 	dt.Msg.At.IsAtAll = b
 	return dt
 }
 
-//at指定人
+// at指定人
 func (dt *DingTalkApi) AtMobiles(mobiles []string) *DingTalkApi {
 	dt.Msg.At.AtMobiles = mobiles
 	return dt
 }
 
-//text类型的content
+// text类型的content
 func (dt *DingTalkApi) SetMsgTypeText(content string) *DingTalkApi {
 	if dt.Msg.MsgType != DING_TALK_MSG_TYPE_TEXT {
 		fmt.Fprintf(os.Stderr, "消息类型 %s 只能调用方法\tSetMsgType%v\n", dt.Msg.MsgType, dt.Msg.MsgType)
@@ -63,7 +63,7 @@ func (dt *DingTalkApi) SetMsgTypeText(content string) *DingTalkApi {
 	return dt
 }
 
-//link类型
+// link类型
 func (dt *DingTalkApi) SetMsgTypeLink(title, text, msgUrl, picUrl string) *DingTalkApi {
 	if dt.Msg.MsgType != DING_TALK_MSG_TYPE_LINK {
 		fmt.Fprintf(os.Stderr, "消息类型 %s 只能调用方法\tSetMsgType%v\n", dt.Msg.MsgType, dt.Msg.MsgType)
@@ -78,7 +78,7 @@ func (dt *DingTalkApi) SetMsgTypeLink(title, text, msgUrl, picUrl string) *DingT
 	return dt
 }
 
-//markdown类型
+// markdown类型
 func (dt *DingTalkApi) SetMsgTypeMarkdown(title, text string) *DingTalkApi {
 	if dt.Msg.MsgType != DING_TALK_MSG_TYPE_MARKDOWN {
 		fmt.Fprintf(os.Stderr, "消息类型 %s 只能调用方法\tSetMsgType%v\n", dt.Msg.MsgType, dt.Msg.MsgType)
@@ -91,7 +91,7 @@ func (dt *DingTalkApi) SetMsgTypeMarkdown(title, text string) *DingTalkApi {
 	return dt
 }
 
-//发送消息
+// 发送消息
 func (dt *DingTalkApi) Send() error {
 	url := fmt.Sprintf(DING_TALK_API_HOST, dt.AccessToken)
 	ct := "application/json;charset=utf-8"
@@ -119,7 +119,7 @@ func (dt *DingTalkApi) Send() error {
 	return nil
 }
 
-//纯文本类型消息结构体
+// 纯文本类型消息结构体
 type DingTalkMsgInfo struct {
 	MsgType  string                   `json:"msgtype"`
 	Text     *DingTalkMsgTypeText     `json:"text,omitempty"`
@@ -134,18 +134,18 @@ const (
 	DING_TALK_MSG_TYPE_LINK     = "link"
 )
 
-//纯文本类型
+// 纯文本类型
 type DingTalkMsgTypeText struct {
 	Content string `json:"content"`
 }
 
-//MarkDown类型
+// MarkDown类型
 type DingTalkMsgTypeMarkdown struct {
 	Title string `json:"title"` //[必选]首屏会话透出的展示内容
 	Text  string `json:"text"`  //[必选]markdown格式的消息
 }
 
-//link类型
+// link类型
 type DingTalkMsgTypeLink struct {
 	Title  string `json:"title"`            //[必选]消息标题
 	Text   string `json:"text"`             //[必选]消息内容。如果太长只会部分展示
@@ -153,13 +153,13 @@ type DingTalkMsgTypeLink struct {
 	PicUrl string `json:"picUrl,omitempty"` //[可选]图片URL
 }
 
-//AT信息
+// AT信息
 type DingTalkAt struct {
 	AtMobiles []string `json:"atMobiles,omitempty"` //被@人的手机号
 	IsAtAll   bool     `json:"isAtAll"`             //@所有人时:true,否则为:false
 }
 
-//响应值
+// 响应值
 type DingTalkApiResp struct {
 	ErrCode int64  `json:"errcode"`
 	ErrMsg  string `json:"errmsg"`

@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-04-17 13:54
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -124,7 +124,7 @@ func TestGeoGridBox_InGridBox(t *testing.T) {
 	testEnd()
 }
 
-//点是否在多边形内
+// 点是否在多边形内
 func TestGeoPolygon_IsPointInPolygon(t *testing.T) {
 	testStart()
 	polygon := getSpecialPolygon4()

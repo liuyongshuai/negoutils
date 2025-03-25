@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-10-09 14:03
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -12,8 +12,8 @@ import (
 	"testing"
 )
 
-//交集及并集测试，要测试下面情况：
-//目前已知：只要有边完全重合时，计算有问题
+// 交集及并集测试，要测试下面情况：
+// 目前已知：只要有边完全重合时，计算有问题
 func TestGeoPolygon_BoolOperation(t *testing.T) {
 	testStart()
 
@@ -95,7 +95,7 @@ func TestGeoPolygon_BoolOperation(t *testing.T) {
 	testEnd()
 }
 
-//两多边形完全没有交集
+// 两多边形完全没有交集
 func getPolygonPairs1() (ret [2]GeoPolygon, title string) {
 	title = "两多边形完全没有交集"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -123,7 +123,7 @@ func getPolygonPairs1() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形只有部分顶点重合，但无交集
+// 两多边形只有部分顶点重合，但无交集
 func getPolygonPairs2() (ret [2]GeoPolygon, title string) {
 	title = "两多边形只有部分顶点重合，但无交集"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -154,7 +154,7 @@ func getPolygonPairs2() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有边重合情况，但无交集
+// 两多边形有边重合情况，但无交集
 func getPolygonPairs3() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有边重合情况，但无交集"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -187,7 +187,7 @@ func getPolygonPairs3() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//一个多边形完全包围另一个多边形，但边无相交情况
+// 一个多边形完全包围另一个多边形，但边无相交情况
 func getPolygonPairs4() (ret [2]GeoPolygon, title string) {
 	title = "一个多边形完全包围另一个多边形，但边无相交情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -217,7 +217,7 @@ func getPolygonPairs4() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//一个多边形完全包围另一个多边形，有边重合情况
+// 一个多边形完全包围另一个多边形，有边重合情况
 func getPolygonPairs5() (ret [2]GeoPolygon, title string) {
 	title = "一个多边形完全包围另一个多边形，有边重合情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -247,7 +247,7 @@ func getPolygonPairs5() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有交集，但交集只有一个多边形，但边没有重合情况
+// 两多边形有交集，但交集只有一个多边形，但边没有重合情况
 func getPolygonPairs6() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有交集，但交集只有一个多边形，但边没有重合情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -270,7 +270,7 @@ func getPolygonPairs6() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有交集，但交集只有一个多边形，边有重合的情况
+// 两多边形有交集，但交集只有一个多边形，边有重合的情况
 func getPolygonPairs7() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有交集，但交集只有一个多边形，边有重合的情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -294,7 +294,7 @@ func getPolygonPairs7() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有交集，但交集是多个多边形，但边没有重合情况
+// 两多边形有交集，但交集是多个多边形，但边没有重合情况
 func getPolygonPairs8() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有交集，但交集是多个多边形，但边没有重合情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -319,7 +319,7 @@ func getPolygonPairs8() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有交集，但交集是多个多边形，边有重合的情况
+// 两多边形有交集，但交集是多个多边形，边有重合的情况
 func getPolygonPairs9() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有交集，但交集是多个多边形，边有重合的情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -343,7 +343,7 @@ func getPolygonPairs9() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形完全相同
+// 两多边形完全相同
 func getPolygonPairs10() (ret [2]GeoPolygon, title string) {
 	title = "两多边形完全相同"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -368,7 +368,7 @@ func getPolygonPairs10() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两多边形有交集，但交集是多个多边形，边有部分重合的情况
+// 两多边形有交集，但交集是多个多边形，边有部分重合的情况
 func getPolygonPairs11() (ret [2]GeoPolygon, title string) {
 	title = "两多边形有交集，但交集是多个多边形，边有部分重合的情况"
 	poly1 := MakeGeoPolygon([]GeoPoint{
@@ -397,7 +397,7 @@ func getPolygonPairs11() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//两个相邻没有交集的矩形，
+// 两个相邻没有交集的矩形，
 func getPolygonPairs12() (ret [2]GeoPolygon, title string) {
 	title = "两个相邻没有交集的矩形"
 	rect1 := GeoRectangle{
@@ -417,7 +417,7 @@ func getPolygonPairs12() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//随机生成的多边形
+// 随机生成的多边形
 func getPolygonPairsRandom() (ret [2]GeoPolygon, title string) {
 	randomPolygonList := GenPolygons(GeoRectangle{
 		MaxLat: 40.033261,
@@ -430,7 +430,7 @@ func getPolygonPairsRandom() (ret [2]GeoPolygon, title string) {
 	return
 }
 
-//在地图上画格子及多边形
+// 在地图上画格子及多边形
 func drawPolygonBoolOperationInMap(
 	htmlName string,
 	midPoint GeoPoint,
@@ -485,7 +485,7 @@ func drawPolygonBoolOperationInMap(
 	}
 }
 
-//画多边形的模板
+// 画多边形的模板
 var geoPolygonBoolOperationHtmlTemplate = `
 <html>
 	<head>

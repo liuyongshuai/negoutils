@@ -2,7 +2,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-22 18:27
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -48,7 +48,7 @@ var (
 	ErrorInvalidInputType  = errors.New("invalid input type")
 )
 
-//转换成特定类型，便于判断
+// 转换成特定类型，便于判断
 func GetBasicKind(v reflect.Value) (Basickind, error) {
 	switch v.Kind() {
 	case reflect.Bool:
@@ -73,19 +73,19 @@ func GetBasicKind(v reflect.Value) (Basickind, error) {
 	return InvalidKind, ErrorInvalidInputType
 }
 
-//int64转byte
+// int64转byte
 func Int64ToBytes(i int64) []byte {
 	var buf = make([]byte, 8)
 	binary.BigEndian.PutUint64(buf, uint64(i))
 	return buf
 }
 
-//bytes转int64
+// bytes转int64
 func BytesToInt64(buf []byte) int64 {
 	return int64(binary.BigEndian.Uint64(buf))
 }
 
-//float64转byte
+// float64转byte
 func Float64ToByte(float float64) []byte {
 	bits := math.Float64bits(float)
 	bs := make([]byte, 8)
@@ -93,26 +93,26 @@ func Float64ToByte(float float64) []byte {
 	return bs
 }
 
-//bytes转float
+// bytes转float
 func ByteToFloat64(bytes []byte) float64 {
 	bits := binary.BigEndian.Uint64(bytes)
 	return math.Float64frombits(bits)
 }
 
-//字符串转为字节切片
+// 字符串转为字节切片
 func StrToByte(s string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&s))
 	h := [3]uintptr{x[0], x[1], x[1]}
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
 
-//字节切片转为字符串
+// 字节切片转为字符串
 func ByteToStr(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-//尽最大努力将给定的类型转换为uint64
-//如"45.67"->45、"98.4abc3"->98、"34.87"->34
+// 尽最大努力将给定的类型转换为uint64
+// 如"45.67"->45、"98.4abc3"->98、"34.87"->34
 func TryBestToUint64(value interface{}) (uint64, error) {
 	ret, err := tryBestConvertAnyTypeToInt(value, true)
 	if err != nil {
@@ -125,8 +125,8 @@ func TryBestToUint64(value interface{}) (uint64, error) {
 	return val.Uint(), nil
 }
 
-//尽最大努力将给定的类型转换为int64
-//如"45.67"->45、"98.4abc3"->98、"34.87"->34
+// 尽最大努力将给定的类型转换为int64
+// 如"45.67"->45、"98.4abc3"->98、"34.87"->34
 func TryBestToInt64(value interface{}) (int64, error) {
 	ret, err := tryBestConvertAnyTypeToInt(value, false)
 	if err != nil {
@@ -139,7 +139,7 @@ func TryBestToInt64(value interface{}) (int64, error) {
 	return val.Int(), nil
 }
 
-//从左边开始提取数据及小数点
+// 从左边开始提取数据及小数点
 func getFloatStrFromLeft(val string) string {
 	val = strings.TrimSpace(val)
 	valBytes := StrToByte(val)
@@ -154,7 +154,7 @@ func getFloatStrFromLeft(val string) string {
 	return buf.String()
 }
 
-//尽最大努力将任意类型转为int64或uint64
+// 尽最大努力将任意类型转为int64或uint64
 func tryBestConvertAnyTypeToInt(value interface{}, isUnsigned bool) (interface{}, error) {
 	val := reflect.ValueOf(value)
 	basicKind, err := GetBasicKind(val)
@@ -237,7 +237,7 @@ func tryBestConvertAnyTypeToInt(value interface{}, isUnsigned bool) (interface{}
 	}
 }
 
-//尽最大努力转换为字符串
+// 尽最大努力转换为字符串
 func TryBestToString(value interface{}) (string, error) {
 	val := reflect.ValueOf(value)
 	basicKind, err := GetBasicKind(val)
@@ -271,7 +271,7 @@ func TryBestToString(value interface{}) (string, error) {
 	}
 }
 
-//尽最大努力转换为float64
+// 尽最大努力转换为float64
 func TryBestToFloat(value interface{}) (float64, error) {
 	val := reflect.ValueOf(value)
 	basicKind, err := GetBasicKind(val)
@@ -306,7 +306,7 @@ func TryBestToFloat(value interface{}) (float64, error) {
 	}
 }
 
-//尽最大努力转为bool类型
+// 尽最大努力转为bool类型
 func TryBestToBool(value interface{}) (bool, error) {
 	val := reflect.ValueOf(value)
 	basicKind, err := GetBasicKind(val)

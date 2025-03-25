@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-28 20:52
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -62,7 +62,7 @@ var (
 	}
 )
 
-//生成mysql里所有表的go结构体形式
+// 生成mysql里所有表的go结构体形式
 func GetMySQLAllTablesStruct(db *DBase) (ret string, err error) {
 	buf := bytes.Buffer{}
 	tables, err := GetAllMySQLTables(db)
@@ -79,7 +79,7 @@ func GetMySQLAllTablesStruct(db *DBase) (ret string, err error) {
 	return buf.String(), nil
 }
 
-//提取所有的表
+// 提取所有的表
 func GetAllMySQLTables(db *DBase) (ret []string, err error) {
 	querySQL := fmt.Sprintf("SHOW TABLES")
 	tmpRows, err := db.FetchRows(querySQL)
@@ -97,14 +97,14 @@ func GetAllMySQLTables(db *DBase) (ret []string, err error) {
 	return
 }
 
-//mysql表信息
+// mysql表信息
 type mysqlTableInfo struct {
 	TableName    string           //表名
 	TableComment string           //表注释
 	Fields       []mysqlFieldInfo //所有的字段列表
 }
 
-//mysql表的字段结构体，用于自动生成相应的go结构体用的
+// mysql表的字段结构体，用于自动生成相应的go结构体用的
 type mysqlFieldInfo struct {
 	FieldName    string //字段名称
 	DataType     string //数据类型
@@ -189,7 +189,7 @@ func GetMySQLTableStruct(db *DBase, tableName string) (ret string, err error) {
 	return buf.String(), nil
 }
 
-//格式字段的名称
+// 格式字段的名称
 func FormatFieldNameToGolangType(fieleName string) string {
 	//如果首字符为数字则要转换一下
 	first := fieleName[:1]
@@ -266,7 +266,7 @@ func FormatFieldNameToGolangType(fieleName string) string {
 	return string(runes)
 }
 
-//mysql类型转为go类型
+// mysql类型转为go类型
 func mysqlTypeToGoType(mysqlType string, isUnsigned bool) string {
 	switch mysqlType {
 	case "tinyint", "int", "smallint", "mediumint":

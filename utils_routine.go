@@ -2,7 +2,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-12-06 23:32
 
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-//构造
+// 构造
 func NewRoutineTool(routineLimit, argQueueSize int, fn RoutineFunc) *RoutineTool {
 	ret := &RoutineTool{
 		routineLimit: routineLimit,
@@ -29,13 +29,13 @@ func NewRoutineTool(routineLimit, argQueueSize int, fn RoutineFunc) *RoutineTool
 
 type RoutineFunc func(arg interface{}, retryTime int, commonArg interface{}) error
 
-//内部使用的参数
+// 内部使用的参数
 type routineArgs struct {
 	argData   interface{}
 	retryTime int
 }
 
-//管理用的结构体
+// 管理用的结构体
 type RoutineTool struct {
 	routineLimit   int              //总的工作线程数量
 	workFunc       RoutineFunc      //工作函数
@@ -47,17 +47,17 @@ type RoutineTool struct {
 	wg             *sync.WaitGroup  //控制各线程用的
 }
 
-//设置重试次数
+// 设置重试次数
 func (rp *RoutineTool) SetRetryTimes(retryTime int) {
 	rp.retryTimes = retryTime
 }
 
-//设置通用参数
+// 设置通用参数
 func (rp *RoutineTool) SetCommonArg(arg interface{}) {
 	rp.commonArg = arg
 }
 
-//将文件的每一行添加到参数里
+// 将文件的每一行添加到参数里
 func (rp *RoutineTool) AddFileLines(files []string) {
 	for _, f := range files {
 		if !FileExists(f) {
@@ -78,18 +78,18 @@ func (rp *RoutineTool) AddFileLines(files []string) {
 	return
 }
 
-//添加参数
+// 添加参数
 func (rp *RoutineTool) AddArg(arg interface{}) {
 	rp.setArg(routineArgs{argData: arg, retryTime: -1})
 }
 
-//添加参数
+// 添加参数
 func (rp *RoutineTool) setArg(arg routineArgs) {
 	arg.retryTime++
 	rp.argQueue <- arg
 }
 
-//添加重试次数
+// 添加重试次数
 func (rp *RoutineTool) Wait() {
 	for {
 		if int(rp.waitRoutineNum) >= rp.routineLimit {
@@ -102,7 +102,7 @@ func (rp *RoutineTool) Wait() {
 	rp.wg.Wait()
 }
 
-//运行
+// 运行
 func (rp *RoutineTool) doWork() {
 	for {
 		atomic.AddInt32(&rp.waitRoutineNum, 1)

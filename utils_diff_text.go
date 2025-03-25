@@ -2,7 +2,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-22 18:43
 
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-//打印两段文本的不同之处，逐行对比哟，必须以换行符
+// 打印两段文本的不同之处，逐行对比哟，必须以换行符
 func PrintTextDiff(text1, text2 string) {
 	reg := regexp.MustCompile(`(\n|\r|\n\r)`)
 	t1 := reg.Split(strings.TrimSpace(text1), -1)
@@ -18,7 +18,7 @@ func PrintTextDiff(text1, text2 string) {
 	PrintTextDiffByGroup([][]string{t1}, [][]string{t2})
 }
 
-//分组打印文本差别
+// 分组打印文本差别
 func PrintTextDiffByGroup(leftText, rightText [][]string) {
 	rightTextLen := len(rightText)
 	leftTextLen := len(leftText)

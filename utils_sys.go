@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-12-13 17:40
 
-package goUtils
+package negoutils
 
 import (
 	"os/exec"
@@ -10,14 +10,14 @@ import (
 	"strings"
 )
 
-//内存使用情况，字节
+// 内存使用情况，字节
 func MemoryGetUsage() uint64 {
 	stat := new(runtime.MemStats)
 	runtime.ReadMemStats(stat)
 	return stat.Alloc
 }
 
-//returnVar：0成功、1失败
+// returnVar：0成功、1失败
 func ExecCmd(command string, output *[]string, returnVar *int) string {
 	r, _ := regexp.Compile(`[ ]+`)
 	parts := r.Split(command, -1)

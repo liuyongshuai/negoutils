@@ -5,7 +5,7 @@
  * @package     es
  * @date        2018-04-20 14:24
  */
-package goUtils
+package negoutils
 
 import (
 	"math"
@@ -29,7 +29,7 @@ const (
 	RATIO3 = 0.0000005028600490023173
 )
 
-//格式化距离，最终都要输出以米为单位
+// 格式化距离，最终都要输出以米为单位
 // 输入"5.5km"=>"5500"
 // 输入"5000m"=>"5000"
 func FormatDistance(distance string) (ret float64) {
@@ -58,7 +58,7 @@ func FormatDistance(distance string) (ret float64) {
 	return
 }
 
-//计算两个经纬度间的中间位置
+// 计算两个经纬度间的中间位置
 func MidPoint(point1, point2 GeoPoint) GeoPoint {
 	if point2.IsEqual(point1) {
 		return point2
@@ -91,11 +91,11 @@ func MidPoint(point1, point2 GeoPoint) GeoPoint {
 	return ret
 }
 
-//在指定距离、角度上，返回另一个经纬度坐标
-//跟经度线的角度，即便角度为90度，也不是一条横线，有误差
-//lat、lng：源经纬度
-//dist：距离，单位米
-//angle：角度，如"45"
+// 在指定距离、角度上，返回另一个经纬度坐标
+// 跟经度线的角度，即便角度为90度，也不是一条横线，有误差
+// lat、lng：源经纬度
+// dist：距离，单位米
+// angle：角度，如"45"
 func PointAtDistAndAngle(point GeoPoint, dist, angle float64) GeoPoint {
 	if dist <= 0 {
 		return point
@@ -114,7 +114,7 @@ func PointAtDistAndAngle(point GeoPoint, dist, angle float64) GeoPoint {
 	return GeoPoint{Lat: lat2, Lng: lng2}
 }
 
-//用三角函数来计算地球上的曲线距离，返回值为米
+// 用三角函数来计算地球上的曲线距离，返回值为米
 func EarthDistanceOld(point1, point2 GeoPoint) float64 {
 	if point1.IsEqual(point2) {
 		return 0
@@ -129,7 +129,7 @@ func EarthDistanceOld(point1, point2 GeoPoint) float64 {
 	return dist * float64(EARTH_RADIUS)
 }
 
-//用拟合出来的多项式来计算距离，返回米
+// 用拟合出来的多项式来计算距离，返回米
 func EarthDistance(point1, point2 GeoPoint) float64 {
 	if point1.IsEqual(point2) {
 		return 0
@@ -147,7 +147,7 @@ func EarthDistance(point1, point2 GeoPoint) float64 {
 	return math.Sqrt(ewDist*ewDist + snDist*snDist)
 }
 
-//将经纬度字符串转为lat、lng
+// 将经纬度字符串转为lat、lng
 func SplitGeoPoint(loc string) (float64, float64) {
 	if len(loc) <= 0 || !strings.Contains(loc, ",") {
 		return 0, 0
@@ -161,7 +161,8 @@ func SplitGeoPoint(loc string) (float64, float64) {
 	return lat, lng
 }
 
-/**
+/*
+*
 随机生成指定数量的多边形，必须指定基本的矩形区域、顶点的最大个数及最小个数
 所有的这些多边形的边，非相邻的不能有交点！
 仅于校验之用，不保证性能！
@@ -230,17 +231,17 @@ func RandomLatLng(minLat, maxLat, minLng, maxLng float64) (lat, lng float64) {
 	return
 }
 
-//角度转为弧度
+// 角度转为弧度
 func ToRadians(d float64) float64 {
 	return d * math.Pi / 180.0
 }
 
-//两点的向量差
+// 两点的向量差
 func VectorDifference(p1 GeoPoint, p2 GeoPoint) GeoPoint {
 	return GeoPoint{Lat: p1.Lat - p2.Lat, Lng: p1.Lng - p2.Lng}
 }
 
-//两向量叉乘
+// 两向量叉乘
 func VectorCrossProduct(p1 GeoPoint, p2 GeoPoint) float64 {
 	cross := p1.Lat*p2.Lng - p1.Lng*p2.Lat
 	if math.Abs(0-cross) < FLOAT_DIFF {

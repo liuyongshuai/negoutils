@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-26 14:38
 
-package goUtils
+package negoutils
 
 import (
 	"testing"

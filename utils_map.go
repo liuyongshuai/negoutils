@@ -2,11 +2,11 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-12-05 13:37
 
-package goUtils
+package negoutils
 
 type mapReduceFunc func(interface{}, interface{}) (interface{}, interface{}, bool)
 
-//提取map的key
+// 提取map的key
 func MapKeys(m map[interface{}]interface{}) []interface{} {
 	keys := make([]interface{}, 0)
 	for k := range m {
@@ -15,7 +15,7 @@ func MapKeys(m map[interface{}]interface{}) []interface{} {
 	return keys
 }
 
-//提取map的value
+// 提取map的value
 func MapValues(m map[interface{}]interface{}) []interface{} {
 	values := make([]interface{}, 0)
 	for _, v := range m {
@@ -24,7 +24,7 @@ func MapValues(m map[interface{}]interface{}) []interface{} {
 	return values
 }
 
-//是否包含某个值
+// 是否包含某个值
 func MapIsSet(m map[interface{}]interface{}, key interface{}) bool {
 	if _, ok := m[key]; ok {
 		return true
@@ -32,7 +32,7 @@ func MapIsSet(m map[interface{}]interface{}, key interface{}) bool {
 	return false
 }
 
-//是否为空map
+// 是否为空map
 func MapIsEmpty(m map[interface{}]interface{}) bool {
 	if (m == nil) || len(m) == 0 {
 		return true
@@ -40,7 +40,7 @@ func MapIsEmpty(m map[interface{}]interface{}) bool {
 	return false
 }
 
-//合并两个map，后面的覆盖前面相同的key
+// 合并两个map，后面的覆盖前面相同的key
 func MapMerge(args ...map[interface{}]interface{}) map[interface{}]interface{} {
 	newmap := make(map[interface{}]interface{})
 	for _, value := range args {
@@ -54,7 +54,7 @@ func MapMerge(args ...map[interface{}]interface{}) map[interface{}]interface{} {
 	return newmap
 }
 
-//遍历map
+// 遍历map
 func MapIterator(m map[interface{}]interface{}, fn mapReduceFunc) map[interface{}]interface{} {
 	ret := make(map[interface{}]interface{})
 	if m != nil {

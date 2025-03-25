@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai
  * @date        2018-03-31 15:15
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"

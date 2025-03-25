@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-09-30 17:21
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-//定义一个矩形
+// 定义一个矩形
 var (
 	//大概在北京四环左上角附近（西北角）
 	testWestNorthPoint = MakeGeoPoint(39.989877, 116.28576)
@@ -94,7 +94,7 @@ var (
 	testIntersectPointsLine8 = MakeGeoLine(testWestSouthPoint, testEastNorthPoint)
 )
 
-//两线段共线的测试
+// 两线段共线的测试
 func TestGeoLine_GetIntersectPoints(t *testing.T) {
 	testStart()
 	interP12, isParallel := testIntersectPointsLine1.GetIntersectPoints(testIntersectPointsLine2)

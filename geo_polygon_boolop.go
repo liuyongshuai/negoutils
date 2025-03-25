@@ -29,14 +29,14 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-10-08 11:51
 
-package goUtils
+package negoutils
 
 import (
 	"math"
 	"sort"
 )
 
-//多边形的类型
+// 多边形的类型
 type polygonType int
 
 const (
@@ -44,17 +44,17 @@ const (
 	POLYGON_TYPE_CLIPPING                    //被裁剪的多边形
 )
 
-//边的类型，主要用于重叠的边
+// 边的类型，主要用于重叠的边
 type edgeType int
 
 const (
 	EDGE_TYPE_NORMAL           edgeType = iota
-	EDGE_TYPE_NON_CONTRIBUTING  //没用的边，最终的结果里不会包含的边
-	EDGE_TYPE_SAME_TRANSITION   //针对inOut值的
+	EDGE_TYPE_NON_CONTRIBUTING          //没用的边，最终的结果里不会包含的边
+	EDGE_TYPE_SAME_TRANSITION           //针对inOut值的
 	EDGE_TYPE_DIFFERENT_TRANSITION
 )
 
-//布尔操作类型
+// 布尔操作类型
 type boolOpType int
 
 const (
@@ -63,17 +63,17 @@ const (
 	OP_TYPE_DIFFERENCE
 )
 
-//多边形裁剪结构体
+// 多边形裁剪结构体
 type polyBoolOperation struct {
 	subject  GeoPolygon
 	clipping GeoPolygon
 	eventQueue
 }
 
-//构造虚拟的扫描线，从左到右依次扫描所有的线段。
-//它是基于事件的，这里的事件分为两类：线段的端点及线段与线段的交点，分别称为端点事件、相交事件。
-//初始时，事件队列是所有线段的端点。
-//如果两个线段相交，那么它们在扫描线列表中是相邻的！
+// 构造虚拟的扫描线，从左到右依次扫描所有的线段。
+// 它是基于事件的，这里的事件分为两类：线段的端点及线段与线段的交点，分别称为端点事件、相交事件。
+// 初始时，事件队列是所有线段的端点。
+// 如果两个线段相交，那么它们在扫描线列表中是相邻的！
 func (pbo *polyBoolOperation) compute(operation boolOpType) (ret []GeoPolygon) {
 	subjectPointNum := len(pbo.subject.Points)
 	clippingPointNum := len(pbo.clipping.Points)
@@ -263,7 +263,7 @@ func (pbo *polyBoolOperation) compute(operation boolOpType) (ret []GeoPolygon) {
 	return connector.toPolygon()
 }
 
-//寻找可能的交点
+// 寻找可能的交点
 func (pbo *polyBoolOperation) possibleIntersection(e1, e2 *endpoint) {
 	l1 := MakeGeoLine(e1.p, e1.other.p)
 	l2 := MakeGeoLine(e2.p, e2.other.p)
@@ -384,7 +384,7 @@ func (pbo *polyBoolOperation) possibleIntersection(e1, e2 *endpoint) {
 	pbo.divideSegment(sortedEvents[3].other, sortedEvents[2].p)
 }
 
-//将一条边根据其上的一个点分成两部分
+// 将一条边根据其上的一个点分成两部分
 func (pbo *polyBoolOperation) divideSegment(e *endpoint, p GeoPoint) {
 	//(e,p)这里e是左端点，p其实是右端点
 	r := &endpoint{
@@ -416,18 +416,18 @@ func (pbo *polyBoolOperation) divideSegment(e *endpoint, p GeoPoint) {
 	pbo.eventQueue.pushQueue(r)
 }
 
-//当扫描线穿过多边形的时候的两多边形的边交点的位置
+// 当扫描线穿过多边形的时候的两多边形的边交点的位置
 type endpoint struct {
-	p      GeoPoint  //当前的点
-	left   bool      //当前点是否为线段的左点，线段表示为 (p, other->p)
-	polygonType      //当前点所属的多边形
-	other  *endpoint //当前点所属线段的另一个点的结构体
-	inout  bool      //针对该点所属的边（p, other->p）的所属的多边形而言，当从点（p.Lng, -无穷）发出的射线穿过此边时，是否为从里到外过渡
-	edgeType         //边的类型，见上注释
-	inside bool      //只有当left=true时才用得着，表示当前线段是否在另一个多边形的内部
+	p           GeoPoint  //当前的点
+	left        bool      //当前点是否为线段的左点，线段表示为 (p, other->p)
+	polygonType           //当前点所属的多边形
+	other       *endpoint //当前点所属线段的另一个点的结构体
+	inout       bool      //针对该点所属的边（p, other->p）的所属的多边形而言，当从点（p.Lng, -无穷）发出的射线穿过此边时，是否为从里到外过渡
+	edgeType              //边的类型，见上注释
+	inside      bool      //只有当left=true时才用得着，表示当前线段是否在另一个多边形的内部
 }
 
-//比较两个端点，必须所有的参数都相同才算是相同
+// 比较两个端点，必须所有的参数都相同才算是相同
 func (ep *endpoint) equals(e *endpoint) bool {
 	return ep.p.IsEqual(e.p) &&
 		ep.left == e.left &&
@@ -438,12 +438,12 @@ func (ep *endpoint) equals(e *endpoint) bool {
 		ep.inside == e.inside
 }
 
-//返回端点所属的线段
+// 返回端点所属的线段
 func (ep *endpoint) segment() GeoLine {
 	return MakeGeoLine(ep.p, ep.other.p)
 }
 
-//判断两个点的上下关系
+// 判断两个点的上下关系
 func (ep *endpoint) below(x GeoPoint) bool {
 	var l GeoLine
 	if ep.left {
@@ -454,18 +454,18 @@ func (ep *endpoint) below(x GeoPoint) bool {
 	return x.IsBelow(l)
 }
 
-//判断两个点的上下关系
+// 判断两个点的上下关系
 func (ep *endpoint) above(x GeoPoint) bool {
 	return !ep.below(x)
 }
 
-//事件队列，每个边的端点为一个事件，两条边的交点也为一个事件
+// 事件队列，每个边的端点为一个事件，两条边的交点也为一个事件
 type eventQueue struct {
 	elements []*endpoint
 	sorted   bool
 }
 
-//将一个端点事件入队列
+// 将一个端点事件入队列
 func (q *eventQueue) pushQueue(e *endpoint) {
 	//如果没有排序的话，直接塞进去即可
 	if !q.sorted {
@@ -490,7 +490,7 @@ func (q *eventQueue) pushQueue(e *endpoint) {
 	q.elements[i+1] = e
 }
 
-//弹出一个
+// 弹出一个
 func (q *eventQueue) popQueue() *endpoint {
 	if !q.sorted {
 		sort.Sort(eventQueueComparer(q.elements))
@@ -501,42 +501,42 @@ func (q *eventQueue) popQueue() *endpoint {
 	return x
 }
 
-//端点事件队列是否为空
+// 端点事件队列是否为空
 func (q *eventQueue) IsEmpty() bool {
 	return len(q.elements) == 0
 }
 
-//比较队列中点的比较器，实现了sort.Interface接口
+// 比较队列中点的比较器，实现了sort.Interface接口
 type eventQueueComparer []*endpoint
 
 func (q eventQueueComparer) Len() int           { return len(q) }
 func (q eventQueueComparer) Less(i, j int) bool { return endpointCompare(q[i], q[j]) }
 func (q eventQueueComparer) Swap(i, j int)      { q[i], q[j] = q[j], q[i] }
 
-//点链，一堆点的连接序列
+// 点链，一堆点的连接序列
 type geoPointChain struct {
 	closed bool
 	points []GeoPoint
 }
 
-//实例化一个点链
+// 实例化一个点链
 func newChain(s GeoLine) *geoPointChain {
 	return &geoPointChain{
 		closed: false,
 		points: []GeoPoint{s.Point1, s.Point2}}
 }
 
-//将指定的点放到链的前端
+// 将指定的点放到链的前端
 func (c *geoPointChain) pushFront(p GeoPoint) {
 	c.points = append([]GeoPoint{p}, c.points...)
 }
 
-//将指定的点放到链的末端
+// 将指定的点放到链的末端
 func (c *geoPointChain) pushBack(p GeoPoint) {
 	c.points = append(c.points, p)
 }
 
-//判断可否将一个边连接成链
+// 判断可否将一个边连接成链
 func (c *geoPointChain) linkSegment(s GeoLine) bool {
 	//第一个点
 	firstPoint := c.points[0]
@@ -584,7 +584,7 @@ func (c *geoPointChain) linkSegment(s GeoLine) bool {
 	return false
 }
 
-//将另一个点链连接到当前链上
+// 将另一个点链连接到当前链上
 func (c *geoPointChain) linkChain(other *geoPointChain) bool {
 	//第一个点
 	firstPoint := c.points[0]
@@ -626,11 +626,11 @@ success:
 	return true
 }
 
-//模拟扫描线，将扫到的点暂存起来，这些点（包括顶点、交点）也叫一个事件，即顶点事件、交点事件
-//这些点所属的线段是有顺序的，从左到右排序，其比较规则见相关方法
+// 模拟扫描线，将扫到的点暂存起来，这些点（包括顶点、交点）也叫一个事件，即顶点事件、交点事件
+// 这些点所属的线段是有顺序的，从左到右排序，其比较规则见相关方法
 type sweepline []*endpoint
 
-//移除一个点事件
+// 移除一个点事件
 func (s *sweepline) remove(key *endpoint) {
 	for i, el := range *s {
 		if el.equals(key) {
@@ -640,7 +640,7 @@ func (s *sweepline) remove(key *endpoint) {
 	}
 }
 
-//扫描线列表里添加一个点，返回其下标
+// 扫描线列表里添加一个点，返回其下标
 func (s *sweepline) insert(item *endpoint) int {
 	length := len(*s)
 	if length == 0 {
@@ -658,13 +658,13 @@ func (s *sweepline) insert(item *endpoint) int {
 	return i + 1
 }
 
-//暂存中间结果，并最终拼装成结果多边形
+// 暂存中间结果，并最终拼装成结果多边形
 type connector struct {
 	openPolys   []geoPointChain
 	closedPolys []geoPointChain
 }
 
-//添加可能的一条边
+// 添加可能的一条边
 func (c *connector) add(s GeoLine) {
 	//遍历所有开放的多边形的线段链，判断可否组成多边形
 	for j := range c.openPolys {
@@ -702,7 +702,7 @@ func (c *connector) add(s GeoLine) {
 	c.openPolys = append(c.openPolys, *newChain(s))
 }
 
-//连接器最终转为多边形
+// 连接器最终转为多边形
 func (c *connector) toPolygon() []GeoPolygon {
 	var poly []GeoPolygon
 	for _, chain := range c.closedPolys {
@@ -715,7 +715,7 @@ func (c *connector) toPolygon() []GeoPolygon {
 	return poly
 }
 
-//比较两个endpoint的大小，返回true时e1在e2后面处理，先处理e2
+// 比较两个endpoint的大小，返回true时e1在e2后面处理，先处理e2
 func endpointCompare(e1, e2 *endpoint) bool {
 	//如果经度不一样，先比较经度
 	if e1.p.Lng != e2.p.Lng {
@@ -736,7 +736,7 @@ func endpointCompare(e1, e2 *endpoint) bool {
 	return e1.above(e2.other.p)
 }
 
-//将一堆点列表反转
+// 将一堆点列表反转
 func reverseGeoPoints(list []GeoPoint) []GeoPoint {
 	length := len(list)
 	other := make([]GeoPoint, length)
@@ -746,7 +746,7 @@ func reverseGeoPoints(list []GeoPoint) []GeoPoint {
 	return other
 }
 
-//有关线段的比较
+// 有关线段的比较
 func segmentCompare(e1, e2 *endpoint) bool {
 	e1Line := MakeGeoLine(e1.p, e1.other.p)
 	switch {
@@ -771,7 +771,7 @@ func segmentCompare(e1, e2 *endpoint) bool {
 	return endpointCompare(e1, e2)
 }
 
-//将两个多边形所有的边放到一个队列里去，并区分来自哪个多边形
+// 将两个多边形所有的边放到一个队列里去，并区分来自哪个多边形
 func addProcessedSegment(q *eventQueue, segment GeoLine, polyType polygonType) {
 	//线段的两个端点相等，异常数据
 	if segment.Point1.IsEqual(segment.Point2) {

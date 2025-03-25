@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-03-27 15:20
  */
-package goUtils
+package negoutils
 
 import (
 	"bufio"
@@ -15,7 +15,8 @@ import (
 	"time"
 )
 
-/**
+/*
+*
 ***********************************************************************
 因为ES经常有如备份数据到文件、从文件中恢复数据的操作，此处写了个方便遍历文件的小东东
 ***********************************************************************
@@ -32,13 +33,13 @@ func NewFileIterator() *FileIterator {
 	return &FileIterator{}
 }
 
-//设置文件
+// 设置文件
 func (fi *FileIterator) SetFile(f string) *FileIterator {
 	fi.file = f
 	return fi
 }
 
-//初始化操作
+// 初始化操作
 func (fi *FileIterator) Init() (*FileIterator, error) {
 	if fi.fp != nil {
 		fi.fp.Close()
@@ -55,7 +56,7 @@ func (fi *FileIterator) Init() (*FileIterator, error) {
 	return fi, nil
 }
 
-//返回一个可遍历的通道
+// 返回一个可遍历的通道
 func (fi *FileIterator) IterLine(fn IteratorLineFunc) {
 	if fi.fp == nil {
 		fi.Init()
@@ -93,12 +94,12 @@ type FileTool struct {
 	flist []string //读取目录下的文件列表结果
 }
 
-//初始化操作
+// 初始化操作
 func (ft *FileTool) Init() {
 	ft.flist = make([]string, 0)
 }
 
-//判断文件或目录是否存在
+// 判断文件或目录是否存在
 func (ft *FileTool) IsExists(f string) bool {
 	if _, err := os.Stat(f); err != nil {
 		if os.IsNotExist(err) {
@@ -108,7 +109,7 @@ func (ft *FileTool) IsExists(f string) bool {
 	return true
 }
 
-//读取目录下的所有文件
+// 读取目录下的所有文件
 func (ft *FileTool) ReadDirFiles(dir string) ([]string, error) {
 	if !ft.IsExists(dir) {
 		errmsg := fmt.Sprintf("dir %v not exists", dir)
@@ -142,7 +143,7 @@ func (ft *FileTool) ReadDirFiles(dir string) ([]string, error) {
 	return ft.flist, nil
 }
 
-//文件是否存在
+// 文件是否存在
 func FileExists(filePath string) bool {
 	if _, err := os.Stat(filePath); err != nil {
 		if os.IsNotExist(err) {
@@ -152,7 +153,7 @@ func FileExists(filePath string) bool {
 	return true
 }
 
-//打开文件，得到一个句柄。如果不存在创建一个，如果存在再判断
+// 打开文件，得到一个句柄。如果不存在创建一个，如果存在再判断
 func OpenNewFile(fileName, bakExt string, isBak bool) (fp *os.File, err error) {
 	if isBak && len(bakExt) == 0 {
 		bakExt = fmt.Sprintf("%s.bak", time.Now().Local().Format("2006-01-02T15:04:05.000"))
@@ -180,7 +181,7 @@ func OpenNewFile(fileName, bakExt string, isBak bool) (fp *os.File, err error) {
 	return
 }
 
-//文件最后修改时间
+// 文件最后修改时间
 func FileModTime(filename string) (int64, error) {
 	fd, err := os.Open(filename)
 	if err != nil {

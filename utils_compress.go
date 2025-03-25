@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2019-03-11 17:53
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"io/ioutil"
 )
 
-//gzip压缩
+// gzip压缩
 func GzipEncode(in []byte) (ret []byte, err error) {
 	var buffer bytes.Buffer
 	writer := gzip.NewWriter(&buffer)
@@ -21,7 +21,7 @@ func GzipEncode(in []byte) (ret []byte, err error) {
 	return buffer.Bytes(), nil
 }
 
-//gzip解压缩
+// gzip解压缩
 func GzipDecode(data []byte) (ret []byte, err error) {
 	reader, err := gzip.NewReader(bytes.NewReader(data))
 	if err != nil {

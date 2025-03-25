@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-22 18:21
 
-package goUtils
+package negoutils
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-//提取本机的IP地址
+// 提取本机的IP地址
 func LocalIP() (ips []string) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -28,7 +28,7 @@ func LocalIP() (ips []string) {
 	return
 }
 
-//获取当前的外网IP
+// 获取当前的外网IP
 func GetRemoteIP() string {
 	url := "http://httpbin.org/ip"
 	httpClient := NewHttpClient(url, context.Background())
@@ -59,7 +59,7 @@ func GetRemoteIP() string {
 	return strings.Join(tmpSlice, ",")
 }
 
-//判断是否为内网
+// 判断是否为内网
 func IsPrivateIP(ip string) bool {
 	longip := Ip2long(ip)
 	//10.0.0.0-10.255.255.255
@@ -77,7 +77,7 @@ func IsPrivateIP(ip string) bool {
 	return false
 }
 
-//IP地址由字符串转为uint32
+// IP地址由字符串转为uint32
 func Ip2long(ipstr string) (ip uint32) {
 	r := `^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})`
 	reg, err := regexp.Compile(r)
@@ -102,7 +102,7 @@ func Ip2long(ipstr string) (ip uint32) {
 	return
 }
 
-//IP地址转为字符串
+// IP地址转为字符串
 func Long2ip(ip uint32) string {
 	return fmt.Sprintf("%d.%d.%d.%d", ip>>24, ip<<8>>24, ip<<16>>24, ip<<24>>24)
 }

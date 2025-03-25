@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-01-25 19:19
  */
-package goUtils
+package negoutils
 
 import (
 	"database/sql"
@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-//MySQL连接的类
+// MySQL连接的类
 type DBase struct {
 	Db      *sql.DB
 	IsDebug bool
@@ -27,7 +27,7 @@ func NewDBase(conf MySQLConf) *DBase {
 	}
 }
 
-//提取查询SQL的结果
+// 提取查询SQL的结果
 func reFormatRowsData(rows *sql.Rows) (ret []map[string]ElemType, err error) {
 	if rows == nil {
 		return
@@ -70,7 +70,7 @@ func reFormatRowsData(rows *sql.Rows) (ret []map[string]ElemType, err error) {
 	return ret, nil
 }
 
-//连接MySQL
+// 连接MySQL
 func (my *DBase) Conn() (*DBase, error) {
 	conf := my.Conf
 	if len(conf.Host) <= 0 {
@@ -110,12 +110,12 @@ func (my *DBase) Conn() (*DBase, error) {
 	return my, nil
 }
 
-//目前的打开连接数
+// 目前的打开连接数
 func (my *DBase) OpenConnNum() int {
 	return my.Db.Stats().OpenConnections
 }
 
-//提取单行的单个字段
+// 提取单行的单个字段
 func (my *DBase) FetchOne(sql string, args ...interface{}) (ret ElemType, err error) {
 	r, err := my.FetchCols(sql, args...)
 	if err != nil {
@@ -127,7 +127,7 @@ func (my *DBase) FetchOne(sql string, args ...interface{}) (ret ElemType, err er
 	return r[0], nil
 }
 
-//提取所有行的第一个字段的列表
+// 提取所有行的第一个字段的列表
 func (my *DBase) FetchCols(sql string, args ...interface{}) ([]ElemType, error) {
 	rets, err := my.FetchRows(sql, args...)
 	if err != nil {
@@ -145,7 +145,7 @@ func (my *DBase) FetchCols(sql string, args ...interface{}) ([]ElemType, error) 
 	return ret, nil
 }
 
-//提取一行数据
+// 提取一行数据
 func (my *DBase) FetchRow(sql string, args ...interface{}) (map[string]ElemType, error) {
 	ret, err := my.FetchRows(sql, args...)
 	if err != nil {
@@ -157,7 +157,7 @@ func (my *DBase) FetchRow(sql string, args ...interface{}) (map[string]ElemType,
 	return ret[0], nil
 }
 
-//提取多行数据
+// 提取多行数据
 func (my *DBase) FetchRows(sql string, args ...interface{}) ([]map[string]ElemType, error) {
 	if my.Db == nil {
 		return nil, fmt.Errorf("not connect MySQL")
@@ -179,10 +179,10 @@ func (my *DBase) FetchRows(sql string, args ...interface{}) ([]map[string]ElemTy
 	return reFormatRowsData(rows)
 }
 
-//提取多行数据
-//table为表名
-//cond为查询条件，全为and
-//fields为要查询的字段，为空时表示查询全部
+// 提取多行数据
+// table为表名
+// cond为查询条件，全为and
+// fields为要查询的字段，为空时表示查询全部
 func (my *DBase) FetchCondRows(table string, cond map[string]interface{}, fields ...string) (ret []map[string]ElemType, err error) {
 	f := filterTableFields(fields...)
 	cd, param := FormatCond(cond, "AND")
@@ -193,7 +193,7 @@ func (my *DBase) FetchCondRows(table string, cond map[string]interface{}, fields
 	return my.FetchRows(fsql, param...)
 }
 
-//执行一条insert/update/delete语句，返回影响行数
+// 执行一条insert/update/delete语句，返回影响行数
 func (my *DBase) Execute(sql string, args ...interface{}) (int64, bool, error) {
 	ret, err := my.doExec(sql, args...)
 	if err != nil {
@@ -206,7 +206,7 @@ func (my *DBase) Execute(sql string, args ...interface{}) (int64, bool, error) {
 	return rowsAffected, true, nil
 }
 
-//删除一条数据，返回lastAffectedRows
+// 删除一条数据，返回lastAffectedRows
 func (my *DBase) DeleteData(table string, cond map[string]interface{}) (int64, bool, error) {
 	cd, param := FormatCond(cond, "AND")
 	dsql := fmt.Sprintf("DELETE FROM `%s`", table)
@@ -216,7 +216,7 @@ func (my *DBase) DeleteData(table string, cond map[string]interface{}) (int64, b
 	return my.Execute(dsql, param...)
 }
 
-//写入一条数据，返回lastInsertId
+// 写入一条数据，返回lastInsertId
 func (my *DBase) InsertData(table string, data map[string]interface{}, isIgnore bool) (int64, bool, error) {
 	ignore := "IGNORE"
 	if !isIgnore {
@@ -238,7 +238,7 @@ func (my *DBase) InsertData(table string, data map[string]interface{}, isIgnore 
 	return lastInsertId, true, nil
 }
 
-//批量写入数据，返回影响行数
+// 批量写入数据，返回影响行数
 func (my *DBase) InsertBatchData(table string, fields []string, data [][]interface{}, isIgnore bool) (int64, bool, error) {
 	fieldsLen := len(fields)
 	if fieldsLen <= 0 {
@@ -282,7 +282,7 @@ func (my *DBase) InsertBatchData(table string, fields []string, data [][]interfa
 	return rowsAffected, true, nil
 }
 
-//执行一条：INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=c+1 语句
+// 执行一条：INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=c+1 语句
 func (my *DBase) InsertUpdateData(table string, insert map[string]interface{}, update map[string]interface{}) (int64, bool, error) {
 	icd, iparam := FormatCond(insert, ",")
 	ucd, uparam := FormatCond(update, ",")
@@ -294,7 +294,7 @@ func (my *DBase) InsertUpdateData(table string, insert map[string]interface{}, u
 	return my.Execute(iusql, iparam...)
 }
 
-//更新一条数据，返回lastAffectedRows
+// 更新一条数据，返回lastAffectedRows
 func (my *DBase) UpdateData(table string, data map[string]interface{}, cond map[string]interface{}) (int64, bool, error) {
 	dcd, dparam := FormatCond(data, ",")
 	ccd, cparam := FormatCond(cond, "AND")
@@ -309,7 +309,7 @@ func (my *DBase) UpdateData(table string, data map[string]interface{}, cond map[
 	return my.Execute(usql, dparam...)
 }
 
-//执行一条select ... for update语句
+// 执行一条select ... for update语句
 func (my *DBase) FetchForUpdate(table string, cond map[string]interface{}) (map[string]ElemType, error) {
 	cd, param := FormatCond(cond, "AND")
 	fusql := fmt.Sprintf("SELECT * FROM `%s`", table)
@@ -320,7 +320,7 @@ func (my *DBase) FetchForUpdate(table string, cond map[string]interface{}) (map[
 	return my.FetchRow(fusql, param...)
 }
 
-//执行一条写语句
+// 执行一条写语句
 func (my *DBase) doExec(sql string, args ...interface{}) (sql.Result, error) {
 	if my.Db == nil {
 		return nil, fmt.Errorf("not connect MySQL")
@@ -342,7 +342,7 @@ func (my *DBase) doExec(sql string, args ...interface{}) (sql.Result, error) {
 	return ret, nil
 }
 
-//关闭连接
+// 关闭连接
 func (my *DBase) Close() error {
 	if my.IsDebug {
 		fmt.Printf("\nstart close mysql....\n")
@@ -353,17 +353,17 @@ func (my *DBase) Close() error {
 	return my.Db.Close()
 }
 
-//提取原始的DB对象
+// 提取原始的DB对象
 func (my *DBase) GetDB() *sql.DB {
 	return my.Db
 }
 
-//提取原始的DB对象
+// 提取原始的DB对象
 func (my *DBase) SetDebug(d bool) {
 	my.IsDebug = d
 }
 
-//Ping
+// Ping
 func (my *DBase) Ping() error {
 	if my.Db == nil {
 		return fmt.Errorf("Not Connect MySQL....")
@@ -371,7 +371,7 @@ func (my *DBase) Ping() error {
 	return my.Db.Ping()
 }
 
-//开启事务
+// 开启事务
 func (my *DBase) BeginTransaction() (*sql.Tx, error) {
 	if my.IsDebug {
 		fmt.Printf("\nstart BeginTransaction....\n")
@@ -379,7 +379,7 @@ func (my *DBase) BeginTransaction() (*sql.Tx, error) {
 	return my.Db.Begin()
 }
 
-//提交事务
+// 提交事务
 func (my *DBase) CommitTransaction(tx *sql.Tx) error {
 	if my.IsDebug {
 		fmt.Printf("\nstart CommitTransaction....\n")
@@ -387,7 +387,7 @@ func (my *DBase) CommitTransaction(tx *sql.Tx) error {
 	return tx.Commit()
 }
 
-//回滚事务
+// 回滚事务
 func (my *DBase) RollBackTransaction(tx *sql.Tx) error {
 	if my.IsDebug {
 		fmt.Printf("\nstart RollBackTransaction....\n")

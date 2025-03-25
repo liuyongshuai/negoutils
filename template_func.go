@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-29 14:37
 
-package goUtils
+package negoutils
 
 import (
 	"encoding/json"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-//常用的模板函数
+// 常用的模板函数
 var CommonTplFuncs = map[string]interface{}{
 	"substr":                  Substr,
 	"htmlspecialchars":        TplFuncHtmlSpecialChars,
@@ -62,7 +62,7 @@ var (
 	}
 )
 
-//高仿PHP的函数htmlspecialchars
+// 高仿PHP的函数htmlspecialchars
 func TplFuncHtmlSpecialChars(html string) template.HTML {
 	replace := strings.NewReplacer(
 		"&", "&amp;",
@@ -75,7 +75,7 @@ func TplFuncHtmlSpecialChars(html string) template.HTML {
 	return template.HTML(html)
 }
 
-//高仿PHP的htmlspecialchars_decode
+// 高仿PHP的htmlspecialchars_decode
 func TplFuncHtmlSpecialcharsDecode(str string) template.HTML {
 	replace := strings.NewReplacer(
 		"&amp;", "&",
@@ -88,7 +88,7 @@ func TplFuncHtmlSpecialcharsDecode(str string) template.HTML {
 	return template.HTML(str)
 }
 
-//json_encode
+// json_encode
 func TplFuncJsonEncode(t interface{}) template.HTML {
 	ret, err := json.Marshal(t)
 	if err != nil {
@@ -97,7 +97,7 @@ func TplFuncJsonEncode(t interface{}) template.HTML {
 	return template.HTML(ret)
 }
 
-//转义html字符
+// 转义html字符
 func TplFuncHtmlQuote(text string) template.HTML {
 	text = strings.Replace(text, "&", "&amp;", -1)
 	text = strings.Replace(text, "<", "&lt;", -1)
@@ -110,7 +110,7 @@ func TplFuncHtmlQuote(text string) template.HTML {
 	return template.HTML(strings.TrimSpace(text))
 }
 
-//反转义html字符串
+// 反转义html字符串
 func TplFuncHtmlUnQuote(text string) template.HTML {
 	text = strings.Replace(text, "&nbsp;", " ", -1)
 	text = strings.Replace(text, "&rdquo;", "”", -1)
@@ -123,24 +123,24 @@ func TplFuncHtmlUnQuote(text string) template.HTML {
 	return template.HTML(strings.TrimSpace(text))
 }
 
-//字符串转为html类型
+// 字符串转为html类型
 func TplFuncStr2Html(raw string) template.HTML {
 	return template.HTML(raw)
 }
 
-//日期格式化
+// 日期格式化
 func TplFuncDateFormat(t time.Time, layout string) template.HTML {
 	return template.HTML(t.Format(layout))
 }
 
-//高仿PHP的日期解析
+// 高仿PHP的日期解析
 func TplFuncDateParse(dateString, format string) (time.Time, error) {
 	replacer := strings.NewReplacer(datePatterns...)
 	format = replacer.Replace(format)
 	return time.ParseInLocation(format, dateString, time.Local)
 }
 
-//高仿PHP的date
+// 高仿PHP的date
 func TplFuncDate(timestamp int64, format string) template.HTML {
 	t := time.Unix(timestamp, 0)
 	replacer := strings.NewReplacer(datePatterns...)
@@ -148,7 +148,7 @@ func TplFuncDate(timestamp int64, format string) template.HTML {
 	return template.HTML(t.Format(format))
 }
 
-//相等
+// 相等
 func TplFuncEQ(arg1 interface{}, arg2 ...interface{}) (bool, error) {
 	v1 := reflect.ValueOf(arg1)
 	k1, err := GetBasicKind(v1)
@@ -191,7 +191,7 @@ func TplFuncEQ(arg1 interface{}, arg2 ...interface{}) (bool, error) {
 	return false, nil
 }
 
-//小于
+// 小于
 func TplFuncLT(arg1, arg2 interface{}) (bool, error) {
 	v1 := reflect.ValueOf(arg1)
 	k1, err := GetBasicKind(v1)

@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-22 18:47
 
-package goUtils
+package negoutils
 
 import (
 	"math/rand"
@@ -11,7 +11,7 @@ import (
 type reduceCallbackFunc func(interface{}) interface{}
 type filterCallbackFunc func(interface{}) bool
 
-//将其他类型转为interface的切片，支持slice/map/[u]int[8-64]/float../string
+// 将其他类型转为interface的切片，支持slice/map/[u]int[8-64]/float../string
 func ToSliceIface(in interface{}) []interface{} {
 	vin := reflect.ValueOf(in)
 	switch vin.Kind() {
@@ -42,7 +42,7 @@ func ToSliceIface(in interface{}) []interface{} {
 	}
 }
 
-//检查interface类型是否在slice里
+// 检查interface类型是否在slice里
 func InSlice(val interface{}, sl []interface{}) bool {
 	for _, sval := range sl {
 		if sval == val {
@@ -52,13 +52,13 @@ func InSlice(val interface{}, sl []interface{}) bool {
 	return false
 }
 
-//合并两个slice
+// 合并两个slice
 func SliceMerge(slice1, slice2 []interface{}) (c []interface{}) {
 	c = append(slice1, slice2...)
 	return
 }
 
-//对给定的slice调用回调函数，生成一个新的slice
+// 对给定的slice调用回调函数，生成一个新的slice
 func SliceReduce(slice []interface{}, a reduceCallbackFunc) (dSlice []interface{}) {
 	for _, v := range slice {
 		dSlice = append(dSlice, a(v))
@@ -66,7 +66,7 @@ func SliceReduce(slice []interface{}, a reduceCallbackFunc) (dSlice []interface{
 	return
 }
 
-//从给定的slice里随机提取新的slice
+// 从给定的slice里随机提取新的slice
 func SliceRand(a []interface{}) (b interface{}) {
 	ReRandSeed()
 	randnum := rand.Intn(len(a))
@@ -74,7 +74,7 @@ func SliceRand(a []interface{}) (b interface{}) {
 	return
 }
 
-//计算int64型slice的和
+// 计算int64型slice的和
 func SliceSum(slice []interface{}) (sum int64) {
 	for _, v := range slice {
 		vi, _ := TryBestToInt64(v)
@@ -83,7 +83,7 @@ func SliceSum(slice []interface{}) (sum int64) {
 	return
 }
 
-//返回给定的slice在回调函数返回true的新slice
+// 返回给定的slice在回调函数返回true的新slice
 func SliceFilter(slice []interface{}, a filterCallbackFunc) (filteredSlice []interface{}) {
 	for _, v := range slice {
 		if a(v) {
@@ -93,7 +93,7 @@ func SliceFilter(slice []interface{}, a filterCallbackFunc) (filteredSlice []int
 	return
 }
 
-//计算两个slice的差集
+// 计算两个slice的差集
 func SliceDiff(slice1, slice2 []interface{}) (diffSlice []interface{}) {
 	for _, v := range slice1 {
 		if !InSlice(v, slice2) {
@@ -103,7 +103,7 @@ func SliceDiff(slice1, slice2 []interface{}) (diffSlice []interface{}) {
 	return
 }
 
-//计算slice交集
+// 计算slice交集
 func SliceIntersect(slice1, slice2 []interface{}) (intersectSlice []interface{}) {
 	for _, v := range slice1 {
 		if InSlice(v, slice2) {
@@ -113,7 +113,7 @@ func SliceIntersect(slice1, slice2 []interface{}) (intersectSlice []interface{})
 	return
 }
 
-//将一个slice切成若干个大小的子slice
+// 将一个slice切成若干个大小的子slice
 func SliceChunk(slice []interface{}, size int) (chunkSlice [][]interface{}) {
 	if size >= len(slice) {
 		chunkSlice = append(chunkSlice, slice)
@@ -127,7 +127,7 @@ func SliceChunk(slice []interface{}, size int) (chunkSlice [][]interface{}) {
 	return
 }
 
-//填充slice
+// 填充slice
 func SlicePad(slice []interface{}, size int, val interface{}) []interface{} {
 	if size <= len(slice) {
 		return slice
@@ -138,7 +138,7 @@ func SlicePad(slice []interface{}, size int, val interface{}) []interface{} {
 	return slice
 }
 
-//slice去重
+// slice去重
 func SliceUnique(slice []interface{}) (uniqueSlice []interface{}) {
 	for _, v := range slice {
 		if !InSlice(v, uniqueSlice) {
@@ -148,7 +148,7 @@ func SliceUnique(slice []interface{}) (uniqueSlice []interface{}) {
 	return
 }
 
-//打乱一个slice
+// 打乱一个slice
 func SliceShuffle(slice []interface{}) []interface{} {
 	ReRandSeed()
 	sliceLen := len(slice)
@@ -160,7 +160,7 @@ func SliceShuffle(slice []interface{}) []interface{} {
 	return slice
 }
 
-//转为字符串slice
+// 转为字符串slice
 func ToStringSlice(arg []interface{}, ignoreErr bool) (ret []string, err error) {
 	for _, v := range arg {
 		vStr, err := TryBestToString(v)
@@ -175,7 +175,7 @@ func ToStringSlice(arg []interface{}, ignoreErr bool) (ret []string, err error) 
 	return
 }
 
-//转为int64地slice
+// 转为int64地slice
 func ToInt64Slice(arg []interface{}, ignoreErr bool) (ret []int64, err error) {
 	for _, v := range arg {
 		vInt64, err := TryBestToInt64(v)
@@ -190,7 +190,7 @@ func ToInt64Slice(arg []interface{}, ignoreErr bool) (ret []int64, err error) {
 	return
 }
 
-//转为float64地slice
+// 转为float64地slice
 func ToFloat64Slice(arg []interface{}, ignoreErr bool) (ret []float64, err error) {
 	for _, v := range arg {
 		vFloat64, err := TryBestToFloat(v)

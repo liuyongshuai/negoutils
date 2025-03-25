@@ -17,7 +17,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-01-25 19:19
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ import (
 详见测试用例：go test -test.run TestNewIDGenerator
 */
 
-//SnowFlake的结构体
+// SnowFlake的结构体
 type SnowFlakeIdGenerator struct {
 	workerId           int64 //当前的workerId
 	workerIdAfterShift int64 //移位后的workerId，可直接跟时间戳、序号取位或操作
@@ -49,7 +49,7 @@ type SnowFlakeIdGenerator struct {
 	timestampLeftShift uint8 //生成的时间戳左移几位，给workId、序列号腾位，初始化时计算出来的
 }
 
-//实例化一个ID生成器
+// 实例化一个ID生成器
 func NewIDGenerator() *SnowFlakeIdGenerator {
 	return &SnowFlakeIdGenerator{
 		workerId:           0,
@@ -67,7 +67,7 @@ func NewIDGenerator() *SnowFlakeIdGenerator {
 	}
 }
 
-//设置worker id
+// 设置worker id
 func (sfg *SnowFlakeIdGenerator) SetWorkerId(w int64) *SnowFlakeIdGenerator {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -76,7 +76,7 @@ func (sfg *SnowFlakeIdGenerator) SetWorkerId(w int64) *SnowFlakeIdGenerator {
 	return sfg
 }
 
-//设置时间戳占的位数
+// 设置时间戳占的位数
 func (sfg *SnowFlakeIdGenerator) SetTimeBitSize(n uint8) *SnowFlakeIdGenerator {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -85,7 +85,7 @@ func (sfg *SnowFlakeIdGenerator) SetTimeBitSize(n uint8) *SnowFlakeIdGenerator {
 	return sfg
 }
 
-//设置worker id占的位数
+// 设置worker id占的位数
 func (sfg *SnowFlakeIdGenerator) SetWorkerIdBitSize(n uint8) *SnowFlakeIdGenerator {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -94,7 +94,7 @@ func (sfg *SnowFlakeIdGenerator) SetWorkerIdBitSize(n uint8) *SnowFlakeIdGenerat
 	return sfg
 }
 
-//设置序号占的位数
+// 设置序号占的位数
 func (sfg *SnowFlakeIdGenerator) SetSequenceBitSize(n uint8) *SnowFlakeIdGenerator {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -103,7 +103,7 @@ func (sfg *SnowFlakeIdGenerator) SetSequenceBitSize(n uint8) *SnowFlakeIdGenerat
 	return sfg
 }
 
-//初始化操作
+// 初始化操作
 func (sfg *SnowFlakeIdGenerator) Init() (*SnowFlakeIdGenerator, error) {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -149,8 +149,8 @@ func (sfg *SnowFlakeIdGenerator) Init() (*SnowFlakeIdGenerator, error) {
 	return sfg, nil
 }
 
-//生成时间戳，根据bit size设置取高几位
-//即，生成的时间戳先右移几位，再左移几位，就保留了最高的指定位数
+// 生成时间戳，根据bit size设置取高几位
+// 即，生成的时间戳先右移几位，再左移几位，就保留了最高的指定位数
 func (sfg *SnowFlakeIdGenerator) genTs() int64 {
 	rawTs := time.Now().UnixNano()
 	diff := 64 - sfg.timeBitSize
@@ -158,7 +158,7 @@ func (sfg *SnowFlakeIdGenerator) genTs() int64 {
 	return ret
 }
 
-//生成下一个时间戳，如果时间戳的位数较小，且序号用完时此处等待的时间会较长
+// 生成下一个时间戳，如果时间戳的位数较小，且序号用完时此处等待的时间会较长
 func (sfg *SnowFlakeIdGenerator) genNextTs(last int64) int64 {
 	for {
 		cur := sfg.genTs()
@@ -168,7 +168,7 @@ func (sfg *SnowFlakeIdGenerator) genNextTs(last int64) int64 {
 	}
 }
 
-//生成下一个ID
+// 生成下一个ID
 func (sfg *SnowFlakeIdGenerator) NextId() (int64, error) {
 	sfg.lock.Lock()
 	defer sfg.lock.Unlock()
@@ -203,7 +203,7 @@ func (sfg *SnowFlakeIdGenerator) NextId() (int64, error) {
 	return curTs, nil
 }
 
-//解析生成的ID
+// 解析生成的ID
 func (sfg *SnowFlakeIdGenerator) Parse(id int64) (int64, int64, int64, error) {
 	//如果还没有初始化
 	if !sfg.isHaveInit {

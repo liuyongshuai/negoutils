@@ -2,7 +2,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-29 11:59
 
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ var (
 	pathSep = string(os.PathSeparator)
 )
 
-//模板构造器
+// 模板构造器
 func NewTplBuilder() *TplBuilder {
 	return &TplBuilder{
 		TplFuncMap: make(template.FuncMap),
@@ -32,7 +32,7 @@ func NewTplBuilder() *TplBuilder {
 	}
 }
 
-//模板结构体
+// 模板结构体
 type TplBuilder struct {
 	TplRootPathDir string                        //模板的路径目录信息
 	TplFuncMap     template.FuncMap              //注册的模板函数
@@ -43,7 +43,7 @@ type TplBuilder struct {
 	lock           *sync.RWMutex                 //同步用的
 }
 
-//初始化相关系统
+// 初始化相关系统
 func (tb *TplBuilder) initTplBuilder() error {
 	if tb.isHaveInit {
 		return nil
@@ -66,32 +66,32 @@ func (tb *TplBuilder) initTplBuilder() error {
 	return nil
 }
 
-//设置根目录
+// 设置根目录
 func (tb *TplBuilder) SetRootPathDir(dir string) *TplBuilder {
 	tb.isHaveInit = false
 	tb.TplRootPathDir = dir
 	return tb
 }
 
-//设置扩展
+// 设置扩展
 func (tb *TplBuilder) SetTplExt(ext string) *TplBuilder {
 	tb.isHaveInit = false
 	tb.TplExt = ext
 	return tb
 }
 
-//添加用于模板上的函数
+// 添加用于模板上的函数
 func (tb *TplBuilder) AddTplFunc(name string, fn interface{}) *TplBuilder {
 	tb.TplFuncMap[name] = fn
 	return tb
 }
 
-//添加模板
+// 添加模板
 func (tb *TplBuilder) AddTplFile(tplFile string) error {
 	return tb.parseTpl(tplFile)
 }
 
-//批量添加添加用于模板上的函数
+// 批量添加添加用于模板上的函数
 func (tb *TplBuilder) AddTplFuncs(fns map[string]interface{}) *TplBuilder {
 	for n, f := range fns {
 		tb.TplFuncMap[n] = f
@@ -99,7 +99,7 @@ func (tb *TplBuilder) AddTplFuncs(fns map[string]interface{}) *TplBuilder {
 	return tb
 }
 
-//执行指定的模板
+// 执行指定的模板
 func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) error {
 	if !tb.isHaveInit {
 		err := tb.initTplBuilder()
@@ -146,8 +146,8 @@ func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) er
 	return nil
 }
 
-//提取所有的模板文件列表信息
-//就是要遍历指定目录下的所有的文件
+// 提取所有的模板文件列表信息
+// 就是要遍历指定目录下的所有的文件
 func (tb *TplBuilder) getAllTplFiles(tplDir ...string) error {
 	rootDir := tb.TplRootPathDir
 	if len(tplDir) > 0 {
@@ -175,7 +175,7 @@ func (tb *TplBuilder) getAllTplFiles(tplDir ...string) error {
 	return nil
 }
 
-//解析模板
+// 解析模板
 func (tb *TplBuilder) parseTpl(tplFile string) error {
 	tn := tb.formatTplName(tplFile)
 	//将模板的内容完全读出来
@@ -198,7 +198,7 @@ func (tb *TplBuilder) parseTpl(tplFile string) error {
 	return nil
 }
 
-//提取所有相关的模板系统
+// 提取所有相关的模板系统
 func (tb *TplBuilder) getTplRelated(tplName string, ret map[string]string) error {
 	tf, ok := tb.TplNameMap[tplName]
 	if !ok {
@@ -231,7 +231,7 @@ func (tb *TplBuilder) getTplRelated(tplName string, ret map[string]string) error
 	return nil
 }
 
-//规范化模板名称，就是去掉根目录即可
+// 规范化模板名称，就是去掉根目录即可
 func (tb *TplBuilder) formatTplName(tname string) string {
 	if strings.HasPrefix(tname, tb.TplRootPathDir) {
 		tname = tname[len(tb.TplRootPathDir):]

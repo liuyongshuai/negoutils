@@ -7,7 +7,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-10-29 19:38
 
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -29,14 +29,14 @@ import (
 	"time"
 )
 
-//构造一个请求结构体
+// 构造一个请求结构体
 func NewHttpClient(httpUrl string, ctx context.Context) *HttpClient {
 	ret := NewEmptyHttpClient()
 	ret.SetCtx(ctx).SetUrl(httpUrl)
 	return ret
 }
 
-//构造空的
+// 构造空的
 func NewEmptyHttpClient() *HttpClient {
 	ret := &HttpClient{
 		hClient: &http.Client{
@@ -57,7 +57,7 @@ func NewEmptyHttpClient() *HttpClient {
 	return ret
 }
 
-//请求结构体
+// 请求结构体
 type HttpClient struct {
 	hClient     *http.Client     //http.Client
 	url         string           //请求的URL
@@ -73,33 +73,33 @@ type HttpClient struct {
 	traceId     string           //追踪问题用的ID
 }
 
-//上传文件的设置
+// 上传文件的设置
 type HttpUploadFile struct {
 	FieldName string //上传文件时用的字段名称
 	FilePath  string //文件的绝对路径
 	FileName  string //上传时显示的文件名称，如果为空则取filePath的basename
 }
 
-//设置context
+// 设置context
 func (ehc *HttpClient) SetCtx(ctx context.Context) *HttpClient {
 	ehc.ctx = ctx
 	return ehc
 }
 
-//设置整体超时时间，默认3秒
+// 设置整体超时时间，默认3秒
 func (ehc *HttpClient) SetTimeout(t time.Duration) *HttpClient {
 	ehc.timeout = t
 	ehc.hClient.Timeout = t
 	return ehc
 }
 
-//设置重试次数，默认3次
+// 设置重试次数，默认3次
 func (ehc *HttpClient) SetRetryTimes(t int) *HttpClient {
 	ehc.retry = t
 	return ehc
 }
 
-//添加要上传的文件
+// 添加要上传的文件
 func (ehc *HttpClient) AddFile(fieldName, filePath, fileName string) *HttpClient {
 	if !FileExists(filePath) {
 		LogErrorf("_HttpClient_AddFile_error||fieldName=%v||filePath=%v||fileName=%v||file not exists", fieldName, filePath, fileName)
@@ -116,25 +116,25 @@ func (ehc *HttpClient) AddFile(fieldName, filePath, fileName string) *HttpClient
 	return ehc
 }
 
-//添加单条header信息
+// 添加单条header信息
 func (ehc *HttpClient) AddHeader(k string, v string) *HttpClient {
 	ehc.headers.Add(k, v)
 	return ehc
 }
 
-//添加单条header信息
+// 添加单条header信息
 func (ehc *HttpClient) SetHeader(k string, v string) *HttpClient {
 	ehc.headers.Set(k, v)
 	return ehc
 }
 
-//提取http.Transport进行二次设置
+// 提取http.Transport进行二次设置
 func (ehc *HttpClient) GetHttpTransport() *http.Transport {
 	ret := ehc.hClient.Transport.(*http.Transport)
 	return ret
 }
 
-//批量设置头信息
+// 批量设置头信息
 func (ehc *HttpClient) AddHeaders(hs map[string]string) *HttpClient {
 	if hs == nil {
 		return ehc
@@ -145,7 +145,7 @@ func (ehc *HttpClient) AddHeaders(hs map[string]string) *HttpClient {
 	return ehc
 }
 
-//批量设置头信息
+// 批量设置头信息
 func (ehc *HttpClient) SetHeaders(hs map[string]string) *HttpClient {
 	if hs == nil {
 		return ehc
@@ -156,26 +156,26 @@ func (ehc *HttpClient) SetHeaders(hs map[string]string) *HttpClient {
 	return ehc
 }
 
-//设置要请求的host（设置header的相应值）
+// 设置要请求的host（设置header的相应值）
 func (ehc *HttpClient) SetHost(host string) *HttpClient {
 	ehc.SetHeader("Host", host)
 	return ehc
 }
 
-//设置URL
+// 设置URL
 func (ehc *HttpClient) SetUrl(u string) *HttpClient {
 	ehc.url = u
 	return ehc
 }
 
-//设置长连接选项
+// 设置长连接选项
 func (ehc *HttpClient) SetKeepAlive(b bool) *HttpClient {
 	trans := ehc.GetHttpTransport()
 	trans.DisableKeepAlives = !b
 	return ehc
 }
 
-//设置代理用的地址和端口
+// 设置代理用的地址和端口
 func (ehc *HttpClient) SetProxy(proxyHost string) *HttpClient {
 	//如果只给了IP:PORT这样的，默认为http方式
 	check, _ := regexp.MatchString(`^[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}\.[\d]{1,3}:[\d]{1,5}$`, proxyHost)
@@ -189,55 +189,55 @@ func (ehc *HttpClient) SetProxy(proxyHost string) *HttpClient {
 	return ehc
 }
 
-//设置跳转策略
+// 设置跳转策略
 func (ehc *HttpClient) SetCheckRedirectFunc(policy func(req *http.Request, via []*http.Request) error) *HttpClient {
 	ehc.hClient.CheckRedirect = policy
 	return ehc
 }
 
-//设置userAgent（设置header的相应值）
+// 设置userAgent（设置header的相应值）
 func (ehc *HttpClient) SetUserAgent(ua string) *HttpClient {
 	ehc.SetHeader("User-Agent", ua)
 	return ehc
 }
 
-//设置cookie（设置header的相应值）
+// 设置cookie（设置header的相应值）
 func (ehc *HttpClient) SetRawCookie(ck string) *HttpClient {
 	ehc.SetHeader("Cookie", ck)
 	return ehc
 }
 
-//设置内容类型（设置header的相应值）
+// 设置内容类型（设置header的相应值）
 func (ehc *HttpClient) SetContentType(ct string) *HttpClient {
 	ehc.SetHeader("Content-Type", ct)
 	return ehc
 }
 
-//设置json内容类型（设置header的相应值）
+// 设置json内容类型（设置header的相应值）
 func (ehc *HttpClient) SetContentTypeJson() *HttpClient {
 	ehc.SetHeader("Content-Type", "application/json;charset=UTF-8")
 	return ehc
 }
 
-//设置二进制流内容类型（设置header的相应值）
+// 设置二进制流内容类型（设置header的相应值）
 func (ehc *HttpClient) SetContentTypeOctetStream() *HttpClient {
 	ehc.SetHeader("Content-Type", "application/octet-stream")
 	return ehc
 }
 
-//设置表单内容类型（设置header的相应值）
+// 设置表单内容类型（设置header的相应值）
 func (ehc *HttpClient) SetContentTypeFormUrlEncoded() *HttpClient {
 	ehc.SetHeader("Content-Type", "application/x-www-form-urlencoded")
 	return ehc
 }
 
-//设置为Ajax请求（设置header的相应值）
+// 设置为Ajax请求（设置header的相应值）
 func (ehc *HttpClient) SetAjax() *HttpClient {
 	ehc.SetHeader("X-Requested-With", "XMLHttpRequest")
 	return ehc
 }
 
-//从header中读取内容类型
+// 从header中读取内容类型
 func (ehc *HttpClient) GetContentType() string {
 	contentType := ehc.headers.Get("Content-Type")
 	if len(contentType) > 0 {
@@ -246,13 +246,13 @@ func (ehc *HttpClient) GetContentType() string {
 	return ehc.headers.Get("content-type")
 }
 
-//添加单个cookie的键值
+// 添加单个cookie的键值
 func (ehc *HttpClient) AddCookie(k, v string) *HttpClient {
 	ehc.AddCookies(map[string]string{k: v})
 	return ehc
 }
 
-//批量添加cookie的键值
+// 批量添加cookie的键值
 func (ehc *HttpClient) AddCookies(ck map[string]string) *HttpClient {
 	if ck == nil {
 		return ehc
@@ -277,20 +277,20 @@ func (ehc *HttpClient) AddCookies(ck map[string]string) *HttpClient {
 	return ehc
 }
 
-//设置referer（设置header的相应值）
+// 设置referer（设置header的相应值）
 func (ehc *HttpClient) SetReferer(referer string) *HttpClient {
 	ehc.SetHeader("Referer", referer)
 	return ehc
 }
 
-//设置HTTP Basic Authentication the provided username and password（设置header的相应值）
+// 设置HTTP Basic Authentication the provided username and password（设置header的相应值）
 func (ehc *HttpClient) SetBasicAuth(username, password string) *HttpClient {
 	auth := username + ":" + password
 	ehc.SetHeader("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(auth)))
 	return ehc
 }
 
-//批量添加字段，一般是 PostForm 用，在即上传文件又有字段时Post也用
+// 批量添加字段，一般是 PostForm 用，在即上传文件又有字段时Post也用
 func (ehc *HttpClient) SetFields(data map[string]string) *HttpClient {
 	if len(data) > 0 {
 		for k, v := range data {
@@ -300,34 +300,34 @@ func (ehc *HttpClient) SetFields(data map[string]string) *HttpClient {
 	return ehc
 }
 
-//添加单个字段，POST用
+// 添加单个字段，POST用
 func (ehc *HttpClient) SetField(k, v string) *HttpClient {
 	ehc.vals.Set(k, v)
 	return ehc
 }
 
-//添加单个字段，可以添加数组，如 ：
-//client.AddField("a","1") 、client.AddField("a","2")
-//在接收的时候将收到 a=[1,2]
+// 添加单个字段，可以添加数组，如 ：
+// client.AddField("a","1") 、client.AddField("a","2")
+// 在接收的时候将收到 a=[1,2]
 func (ehc *HttpClient) AddField(k, v string) *HttpClient {
 	ehc.vals.Add(k, v)
 	return ehc
 }
 
-//获取buf地址，直接操作即可。此为POST 操作里的 body
-//如传递raw post的body信息时：httpClient.GetBuffer().Write(c)
+// 获取buf地址，直接操作即可。此为POST 操作里的 body
+// 如传递raw post的body信息时：httpClient.GetBuffer().Write(c)
 func (ehc *HttpClient) GetBuffer() *bytes.Buffer {
 	return ehc.buf
 }
 
-//设置原始的请求的body信息，像请求Apollo的接口时候就让提交json字符串，没有别的参数
-//一般只有POST/PUT用得着，等同于httpClient.GetBuffer().Write(c)
+// 设置原始的请求的body信息，像请求Apollo的接口时候就让提交json字符串，没有别的参数
+// 一般只有POST/PUT用得着，等同于httpClient.GetBuffer().Write(c)
 func (ehc *HttpClient) SetRawRequestBody(b []byte) *HttpClient {
 	ehc.buf.Write(b)
 	return ehc
 }
 
-//发起GET请求并返回数据
+// 发起GET请求并返回数据
 func (ehc *HttpClient) Get() (*HttpResponse, error) {
 	httpReq, err := http.NewRequest("GET", ehc.url, nil)
 	if err != nil {
@@ -342,13 +342,13 @@ func (ehc *HttpClient) Get() (*HttpResponse, error) {
 	return ehc.processResponse(response, err)
 }
 
-//发起POST请求并返回数据，没有上传文件，只是简单的模拟提交表单操作
+// 发起POST请求并返回数据，没有上传文件，只是简单的模拟提交表单操作
 func (ehc *HttpClient) PostForm() (*HttpResponse, error) {
 	ehc.SetContentTypeFormUrlEncoded()
 	return ehc.Post()
 }
 
-//发起head请求并返回数据
+// 发起head请求并返回数据
 func (ehc *HttpClient) Head() (*HttpResponse, error) {
 	httpReq, err := http.NewRequest("HEAD", ehc.url, nil)
 	if err != nil {
@@ -363,8 +363,8 @@ func (ehc *HttpClient) Head() (*HttpResponse, error) {
 	return ehc.processResponse(resp, err)
 }
 
-//发起POST请求并返回数据，有字段、上传文件，或者raw post用的
-//一般，raw post body 不会和上传文件、其他from表单信息同时出现
+// 发起POST请求并返回数据，有字段、上传文件，或者raw post用的
+// 一般，raw post body 不会和上传文件、其他from表单信息同时出现
 func (ehc *HttpClient) Post() (*HttpResponse, error) {
 	//如果buf为空，要用KV值、上传的文件填充buf，否则就是要POST的raw body
 	//因为writer在关闭时会在数据的尾部加上一串东西
@@ -394,7 +394,7 @@ func (ehc *HttpClient) Post() (*HttpResponse, error) {
 	return ehc.processResponse(resp, err)
 }
 
-//往缓冲里写数据，包括上传的文件、提交的字段列表
+// 往缓冲里写数据，包括上传的文件、提交的字段列表
 func (ehc *HttpClient) procWriter() *multipart.Writer {
 	writer := multipart.NewWriter(ehc.buf)
 	commErrMsg := ehc.getComErrMsg()
@@ -452,7 +452,7 @@ func (ehc *HttpClient) procWriter() *multipart.Writer {
 	return writer
 }
 
-//获取通用的日志信息
+// 获取通用的日志信息
 func (ehc *HttpClient) getComErrMsg() string {
 	var vals, headers []string
 	for k, v := range ehc.vals {
@@ -466,7 +466,7 @@ func (ehc *HttpClient) getComErrMsg() string {
 	return commErrMsg
 }
 
-//处理响应信息
+// 处理响应信息
 func (ehc *HttpClient) processResponse(response *http.Response, err error) (*HttpResponse, error) {
 	ret := NewHttpResponse(response)
 	commErrMsg := ehc.getComErrMsg()
@@ -516,7 +516,7 @@ func (ehc *HttpClient) processResponse(response *http.Response, err error) (*Htt
 	return ret, nil
 }
 
-//执行请求操作
+// 执行请求操作
 func (ehc *HttpClient) do(httpReq *http.Request) (resp *http.Response, err error) {
 	ehc.traceId = FakeTraceId()
 	httpReq.URL, _ = url.Parse(ehc.url)

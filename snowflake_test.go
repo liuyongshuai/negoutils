@@ -1,4 +1,4 @@
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -68,7 +68,7 @@ func TestNewIDGenerator(t *testing.T) {
 	testEnd()
 }
 
-//多线程测试
+// 多线程测试
 func TestSnowFlakeIdGenerator_MultiThread(t *testing.T) {
 	testStart()
 

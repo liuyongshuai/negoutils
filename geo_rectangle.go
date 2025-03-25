@@ -5,13 +5,13 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-09-30 17:14
  */
-package goUtils
+package negoutils
 
 import (
 	"math"
 )
 
-//一个矩形
+// 一个矩形
 type GeoRectangle struct {
 	MinLat float64 `json:"min_lat"` //最小纬度
 	MinLng float64 `json:"min_lng"` //最小经度
@@ -19,7 +19,7 @@ type GeoRectangle struct {
 	MaxLng float64 `json:"max_lng"` //最大经度
 }
 
-//校验是否为合法的矩形
+// 校验是否为合法的矩形
 func (gr *GeoRectangle) Check() bool {
 	if gr.MaxLng <= gr.MinLng || gr.MaxLat <= gr.MinLat {
 		return false
@@ -27,17 +27,17 @@ func (gr *GeoRectangle) Check() bool {
 	return true
 }
 
-//经度方向的跨度
+// 经度方向的跨度
 func (gr *GeoRectangle) LngSpan() float64 {
 	return gr.MaxLng - gr.MinLng
 }
 
-//纬度方向的跨度
+// 纬度方向的跨度
 func (gr *GeoRectangle) LatSpan() float64 {
 	return gr.MaxLat - gr.MinLat
 }
 
-//判断给定的经纬度是否在小格子内，包括边界
+// 判断给定的经纬度是否在小格子内，包括边界
 func (gr *GeoRectangle) IsPointInRect(point GeoPoint) bool {
 	if point.Lat <= gr.MaxLat &&
 		point.Lat >= gr.MinLat &&
@@ -48,7 +48,7 @@ func (gr *GeoRectangle) IsPointInRect(point GeoPoint) bool {
 	return false
 }
 
-//判断给定的经纬度是否完全在小格子内，不包括边界
+// 判断给定的经纬度是否完全在小格子内，不包括边界
 func (gr *GeoRectangle) IsPointRealInRect(point GeoPoint) bool {
 	if point.Lat < gr.MaxLat &&
 		point.Lat > gr.MinLat &&
@@ -59,7 +59,7 @@ func (gr *GeoRectangle) IsPointRealInRect(point GeoPoint) bool {
 	return false
 }
 
-//获取中心点坐标
+// 获取中心点坐标
 func (gr *GeoRectangle) MidPoint() GeoPoint {
 	point := MidPoint(
 		GeoPoint{Lat: gr.MaxLat, Lng: gr.MaxLng},
@@ -68,7 +68,7 @@ func (gr *GeoRectangle) MidPoint() GeoPoint {
 	return point
 }
 
-//矩形X方向的边长，即纬度线方向，保持纬度相同即可，单位米
+// 矩形X方向的边长，即纬度线方向，保持纬度相同即可，单位米
 func (gr *GeoRectangle) Width() float64 {
 	return EarthDistance(
 		GeoPoint{Lat: gr.MinLat, Lng: gr.MaxLng},
@@ -76,7 +76,7 @@ func (gr *GeoRectangle) Width() float64 {
 	)
 }
 
-//矩形Y方向的边长，即经度线方向，保持经度相同即可，单位米
+// 矩形Y方向的边长，即经度线方向，保持经度相同即可，单位米
 func (gr *GeoRectangle) Height() float64 {
 	return EarthDistance(
 		GeoPoint{Lat: gr.MaxLat, Lng: gr.MaxLng},
@@ -84,7 +84,7 @@ func (gr *GeoRectangle) Height() float64 {
 	)
 }
 
-//矩形的所有的点，从左下角开始，按顺时针方向来返回
+// 矩形的所有的点，从左下角开始，按顺时针方向来返回
 func (gr *GeoRectangle) GetRectVertex() (ret []GeoPoint) {
 	ret = append(ret,
 		GeoPoint{Lat: gr.MinLat, Lng: gr.MinLng}, //经纬度均最小
@@ -95,27 +95,27 @@ func (gr *GeoRectangle) GetRectVertex() (ret []GeoPoint) {
 	return
 }
 
-//左下角的坐标：经纬度最小
+// 左下角的坐标：经纬度最小
 func (gr *GeoRectangle) LeftBottomPoint() GeoPoint {
 	return GeoPoint{Lat: gr.MinLat, Lng: gr.MinLng}
 }
 
-//左上角的坐标：经度最小、纬度最大
+// 左上角的坐标：经度最小、纬度最大
 func (gr *GeoRectangle) LeftUpPoint() GeoPoint {
 	return GeoPoint{Lat: gr.MaxLat, Lng: gr.MinLng}
 }
 
-//右上角的坐标：经纬度最大
+// 右上角的坐标：经纬度最大
 func (gr *GeoRectangle) RightUpPoint() GeoPoint {
 	return GeoPoint{Lat: gr.MaxLat, Lng: gr.MaxLng}
 }
 
-//右下角的坐标：经度最大、纬度最小
+// 右下角的坐标：经度最大、纬度最小
 func (gr *GeoRectangle) RightBottomPoint() GeoPoint {
 	return GeoPoint{Lat: gr.MinLat, Lng: gr.MaxLng}
 }
 
-//左边框线段，从上往下指
+// 左边框线段，从上往下指
 func (gr *GeoRectangle) LeftBorder() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MaxLat, Lng: gr.MinLng},
@@ -123,7 +123,7 @@ func (gr *GeoRectangle) LeftBorder() GeoLine {
 	}
 }
 
-//右边框线段，从上往下指
+// 右边框线段，从上往下指
 func (gr *GeoRectangle) RightBorder() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MaxLat, Lng: gr.MaxLng},
@@ -131,7 +131,7 @@ func (gr *GeoRectangle) RightBorder() GeoLine {
 	}
 }
 
-//上边框线段，从左往右指
+// 上边框线段，从左往右指
 func (gr *GeoRectangle) TopBorder() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MaxLat, Lng: gr.MinLng},
@@ -139,7 +139,7 @@ func (gr *GeoRectangle) TopBorder() GeoLine {
 	}
 }
 
-//下边框线段，从左往右指
+// 下边框线段，从左往右指
 func (gr *GeoRectangle) BottomBorder() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MinLat, Lng: gr.MinLng},
@@ -147,7 +147,7 @@ func (gr *GeoRectangle) BottomBorder() GeoLine {
 	}
 }
 
-//矩形的左上角、右下角的对象线
+// 矩形的左上角、右下角的对象线
 func (gr *GeoRectangle) LeftUp2RightBottomLine() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MaxLat, Lng: gr.MinLng},
@@ -155,7 +155,7 @@ func (gr *GeoRectangle) LeftUp2RightBottomLine() GeoLine {
 	}
 }
 
-//矩形的左下角、右上角的对象线
+// 矩形的左下角、右上角的对象线
 func (gr *GeoRectangle) LeftBottom2RightUpLine() GeoLine {
 	return GeoLine{
 		Point1: GeoPoint{Lat: gr.MinLat, Lng: gr.MinLng},
@@ -163,7 +163,7 @@ func (gr *GeoRectangle) LeftBottom2RightUpLine() GeoLine {
 	}
 }
 
-//矩形的所有的边
+// 矩形的所有的边
 func (gr *GeoRectangle) GetRectBorders() (ret []GeoLine) {
 	p := gr.GetRectVertex()
 	ret = append(ret,
@@ -193,17 +193,17 @@ func (gr *GeoRectangle) Union(rect *GeoRectangle) GeoRectangle {
 	return ret
 }
 
-//两矩形是否相等
+// 两矩形是否相等
 func (gr *GeoRectangle) IsEqual(rect GeoRectangle) bool {
 	return gr.MinLng == rect.MinLng && gr.MaxLng == rect.MaxLng && gr.MinLat == rect.MinLat && gr.MaxLat == rect.MaxLat
 }
 
-//将矩形转为多边形对象
+// 将矩形转为多边形对象
 func (gr *GeoRectangle) ToPolygon() GeoPolygon {
 	return MakeGeoPolygon(gr.GetRectVertex())
 }
 
-//两矩形是否有重合
+// 两矩形是否有重合
 func (gr *GeoRectangle) IsIntersect(rect GeoRectangle, isReal bool) bool {
 	if gr.IsEqual(rect) {
 		return true
@@ -255,7 +255,7 @@ func (gr *GeoRectangle) IsIntersect(rect GeoRectangle, isReal bool) bool {
 	return false
 }
 
-//拷贝【看起来没啥用】
+// 拷贝【看起来没啥用】
 func (gr *GeoRectangle) Clone() GeoRectangle {
 	return GeoRectangle{
 		MinLat: gr.MinLat,

@@ -4,7 +4,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-04-17 13:28
  */
-package goUtils
+package negoutils
 
 import (
 	"bytes"
@@ -29,16 +29,16 @@ var (
 	geoHashBase32Pos = make(map[byte]int)
 )
 
-//初始化操作
+// 初始化操作
 func init() {
 	for i, c := range geoHashBase32 {
 		geoHashBase32Pos[c] = i
 	}
 }
 
-//统一封装的计算geohash的方法，
-//当 gtype==GEOHASH_TYPE_NORMAL 时的精度情况见GeoHashEncode()方法的说明
-//当 gtype==GEOHASH_TYPE_BITS 时的精度情况见GeoHashBitsEncode()方法的说明
+// 统一封装的计算geohash的方法，
+// 当 gtype==GEOHASH_TYPE_NORMAL 时的精度情况见GeoHashEncode()方法的说明
+// 当 gtype==GEOHASH_TYPE_BITS 时的精度情况见GeoHashBitsEncode()方法的说明
 func GeneralGeoHashEncode(lat, lng float64, precision, gtype int) (string, *GeoRectangle) {
 	if gtype == GEOHASH_TYPE_NORMAL {
 		return GeoHashEncode(lat, lng, precision)
@@ -49,8 +49,8 @@ func GeneralGeoHashEncode(lat, lng float64, precision, gtype int) (string, *GeoR
 	return "", &GeoRectangle{}
 }
 
-//统一封装的解码geohash方法
-//precision精度参数只有当gtype == GEOHASH_TYPE_BITS时才用得着，其他的传0即可
+// 统一封装的解码geohash方法
+// precision精度参数只有当gtype == GEOHASH_TYPE_BITS时才用得着，其他的传0即可
 func GeneralGeoHashDecode(geohash string, precision, gtype int) *GeoRectangle {
 	if gtype == GEOHASH_TYPE_NORMAL {
 		return GeoHashDecode(geohash)
@@ -64,10 +64,12 @@ func GeneralGeoHashDecode(geohash string, precision, gtype int) *GeoRectangle {
 	return &GeoRectangle{}
 }
 
-/**
+/*
+*
 geoHash算法详见介绍：https://www.cnblogs.com/LBSer/p/3310455.html
 最后生成一个geohash的字符串，和一个包括geohash的小格子，可以取到小格子四个角经纬度信息及宽高
 北京的相关精度如下（不同纬度的宽度不一样，从南向北，小格子越来越窄）：
+
 	precision:4	dist:30022m x 19567m
 	precision:5	dist:3750m x 4891m
 	precision:6	dist:937m x 611m
@@ -118,9 +120,9 @@ func GeoHashEncode(lat, lng float64, precision int) (string, *GeoRectangle) {
 	return buf.String(), b
 }
 
-//geoHash转换为坐标点，返回的是一个格子
-//当对一对经纬度转为geoHash，再次转为经纬度时只能保证是同一个格子
-//得到的只是格子四个角的经纬度坐标，并不能精确的还原之前的经纬度
+// geoHash转换为坐标点，返回的是一个格子
+// 当对一对经纬度转为geoHash，再次转为经纬度时只能保证是同一个格子
+// 得到的只是格子四个角的经纬度坐标，并不能精确的还原之前的经纬度
 func GeoHashDecode(geohash string) *GeoRectangle {
 	ret := &GeoRectangle{}
 	isEven := true
@@ -153,7 +155,7 @@ func GeoHashDecode(geohash string) *GeoRectangle {
 	return ret
 }
 
-//计算给定的经纬度点在指定精度下周围8个区域的geoHash编码，包括自身，一共9个点
+// 计算给定的经纬度点在指定精度下周围8个区域的geoHash编码，包括自身，一共9个点
 func GetNeighborsGeoCodes(lat, lng float64, precision int) []string {
 	if lat < MIN_LATITUDE || lat > MAX_LATITUDE {
 		return []string{}
@@ -191,9 +193,11 @@ func GetNeighborsGeoCodes(lat, lng float64, precision int) []string {
 	return geoHashList
 }
 
-/**
+/*
+*
 将geohash编码为uint64类型，源自：https://github.com/yinqiwen/geohash-int
 北京的相关精度如下（不同纬度的宽度不一样，从南向北，小格子越来越窄）：
+
 	precision=12	dist=7500 x 4891
 	precision=13	dist=3750 x 2445
 	precision=14	dist=1875 x 1222
@@ -246,8 +250,8 @@ func GeoHashBitsEncode(lat, lng float64, precision uint8) (geo uint64, rect *Geo
 	return
 }
 
-//对编码成位的geohash解码成小矩形
-//源自：https://github.com/yinqiwen/geohash-int
+// 对编码成位的geohash解码成小矩形
+// 源自：https://github.com/yinqiwen/geohash-int
 func GeoHashBitsDecode(geohash uint64, precision uint8) *GeoRectangle {
 	rect := GeoRectangle{MinLat: MIN_LATITUDE, MinLng: MIN_LONGITUDE, MaxLat: MAX_LATITUDE, MaxLng: MAX_LONGITUDE}
 	var i uint8
@@ -269,7 +273,7 @@ func GeoHashBitsDecode(geohash uint64, precision uint8) *GeoRectangle {
 	return &rect
 }
 
-//获取附近的9个小格子
+// 获取附近的9个小格子
 func GeoHashBitsNeighbors(lat, lng float64, precision uint8) (ret []uint64) {
 	geohash, _ := GeoHashBitsEncode(lat, lng, precision)
 	if geohash == 0 {
@@ -290,7 +294,7 @@ func GeoHashBitsNeighbors(lat, lng float64, precision uint8) (ret []uint64) {
 	return ret
 }
 
-//移位
+// 移位
 func geohashMoveBits(geohash uint64, precision uint8, dx, dy int8) uint64 {
 	if dx != 0 {
 		var x = geohash & 0xaaaaaaaaaaaaaaaa

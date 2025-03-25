@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-12-07 19:43
 
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-//开始测试
+// 开始测试
 func testStart() {
 	s, _ := getTestDelim()
 	fmt.Print(s)
@@ -20,7 +20,7 @@ func testEnd() {
 	fmt.Print(e)
 }
 
-//内部使用的获取测试方法的输出分隔符
+// 内部使用的获取测试方法的输出分隔符
 func getTestDelim() (start, end string) {
 	pc, _, _, _ := runtime.Caller(2)
 	f := runtime.FuncForPC(pc)

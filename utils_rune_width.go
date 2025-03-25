@@ -3,7 +3,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-11-27 12:24
 
-package goUtils
+package negoutils
 
 import (
 	"os"
@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-//单个rune宽度 http://www.unicode.org/reports/tr11/
+// 单个rune宽度 http://www.unicode.org/reports/tr11/
 func RuneWidth(r rune) int {
 	switch {
 	case r < 0 || r > 0x10FFFF || isRuneInTables(r, nonprint, combining, notassigned):
@@ -23,7 +23,7 @@ func RuneWidth(r rune) int {
 	}
 }
 
-//返回字符串的宽度，看得见的
+// 返回字符串的宽度，看得见的
 func RuneStringWidth(s string) (width int) {
 	r1, r2 := rune(0), rune(0)
 	for _, r := range []rune(s) {
@@ -40,7 +40,7 @@ func RuneStringWidth(s string) (width int) {
 	return width
 }
 
-//截字符串到指定宽度
+// 截字符串到指定宽度
 func RuneTruncate(s string, w int, tail string) string {
 	if RuneStringWidth(s) <= w {
 		return s
@@ -60,8 +60,8 @@ func RuneTruncate(s string, w int, tail string) string {
 	return string(r[0:i]) + tail
 }
 
-//将字符串截断成许多行，每行的长度为w
-//返回截断成多行的字符串及行数
+// 将字符串截断成许多行，每行的长度为w
+// 返回截断成多行的字符串及行数
 func RuneWrap(s string, w int) (string, int) {
 	width := 0
 	lineNum := 1
@@ -87,7 +87,7 @@ func RuneWrap(s string, w int) (string, int) {
 	return out, lineNum
 }
 
-//填充左边到指定的宽度
+// 填充左边到指定的宽度
 func RuneFillLeft(s string, w int) string {
 	width := RuneStringWidth(s)
 	count := w - width
@@ -101,7 +101,7 @@ func RuneFillLeft(s string, w int) string {
 	return s
 }
 
-//填充右边到指定的宽度
+// 填充右边到指定的宽度
 func RuneFillRight(s string, w int) string {
 	width := RuneStringWidth(s)
 	count := w - width
@@ -895,7 +895,7 @@ func init() {
 	}
 }
 
-//是否为东亚语言
+// 是否为东亚语言
 func IsEastAsianLocale() bool {
 	locale := os.Getenv("LC_CTYPE")
 	if locale == "" {

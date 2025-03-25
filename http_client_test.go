@@ -1,7 +1,7 @@
 // @author      Liu Yongshuai<liuyongshuai@hotmail.com>
 // @date        2018-10-30 11:14
 
-package goUtils
+package negoutils
 
 import (
 	"context"
@@ -15,7 +15,7 @@ var (
 	testUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"
 )
 
-//纯GET请求
+// 纯GET请求
 func TestHttpClient_Get(t *testing.T) {
 	testStart()
 
@@ -36,7 +36,7 @@ func TestHttpClient_Get(t *testing.T) {
 	testEnd()
 }
 
-//POST几个字段信息
+// POST几个字段信息
 func TestHttpClient_Post(t *testing.T) {
 	testStart()
 
@@ -57,7 +57,7 @@ func TestHttpClient_Post(t *testing.T) {
 	testEnd()
 }
 
-//POST几个字段信息并上传文件
+// POST几个字段信息并上传文件
 func TestHttpClient_PostUploadFiles(t *testing.T) {
 	testStart()
 
@@ -85,7 +85,7 @@ func TestHttpClient_PostUploadFiles(t *testing.T) {
 	testEnd()
 }
 
-//纯上传文件
+// 纯上传文件
 func TestHttpClient_UploadFiles(t *testing.T) {
 	testStart()
 
@@ -109,7 +109,7 @@ func TestHttpClient_UploadFiles(t *testing.T) {
 	testEnd()
 }
 
-//直接设置请求的POST的body信息，没有字段，没有文件
+// 直接设置请求的POST的body信息，没有字段，没有文件
 func TestHttpClient_SetRawPostBody(t *testing.T) {
 	testStart()
 
@@ -147,7 +147,7 @@ func TestHttpClient_CheckRedirect(t *testing.T) {
 	testEnd()
 }
 
-//校验跳转的函数
+// 校验跳转的函数
 func checkRedirectFunc(req *http.Request, via []*http.Request) error {
 	if len(via) >= 2 {
 		//fmt.Printf("%# v\n", pretty.Formatter(req))

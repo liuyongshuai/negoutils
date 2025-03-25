@@ -2,7 +2,7 @@
  * @author      Liu Yongshuai<liuyongshuai@hotmail.com>
  * @date        2018-03-27 15:20
  */
-package goUtils
+package negoutils
 
 import (
 	"fmt"
@@ -81,7 +81,7 @@ func ProcTime(st, et int64) float64 {
 	return ret
 }
 
-//超级警告，下划线、闪烁提示
+// 超级警告，下划线、闪烁提示
 func BitchWarning(msg string) string {
 	var tmp = []string{msg}
 	for _, fn := range colorFns {
@@ -90,7 +90,7 @@ func BitchWarning(msg string) string {
 	return strings.Join(tmp, "\n")
 }
 
-//超级警告，只有颜色
+// 超级警告，只有颜色
 func FuckWarning(msg string) string {
 	var tmp = []string{msg}
 	for _, fn := range colorFns {
@@ -99,7 +99,7 @@ func FuckWarning(msg string) string {
 	return strings.Join(tmp, "\n")
 }
 
-//生成一个假的traceId
+// 生成一个假的traceId
 func FakeTraceId() (traceId string) {
 	for {
 		ReRandSeed()
@@ -112,7 +112,7 @@ func FakeTraceId() (traceId string) {
 	return traceId
 }
 
-//重新设置随机数种子
+// 重新设置随机数种子
 func ReRandSeed() {
 	genId, err := SequenceIDGenerator.NextId()
 	if err != nil {
@@ -122,7 +122,7 @@ func ReRandSeed() {
 	}
 }
 
-//根据业务特点，过滤非法的ID并去重，一般用于批量根据ID提取信息时
+// 根据业务特点，过滤非法的ID并去重，一般用于批量根据ID提取信息时
 func FilterIds(ids []interface{}) (ret []int64) {
 	tmap := map[int64]struct{}{}
 	for _, id := range ids {
@@ -138,7 +138,7 @@ func FilterIds(ids []interface{}) (ret []int64) {
 	return
 }
 
-//返回最大的一个int型
+// 返回最大的一个int型
 func MaxInt64(args ...interface{}) (int64, error) {
 	if len(args) <= 0 {
 		return 0, ErrorInvalidInputType
@@ -163,7 +163,7 @@ func MaxInt64(args ...interface{}) (int64, error) {
 	return m, nil
 }
 
-//返回最小的一个int型
+// 返回最小的一个int型
 func MinInt64(args ...interface{}) (int64, error) {
 	if len(args) <= 0 {
 		return 0, ErrorInvalidInputType
@@ -188,7 +188,7 @@ func MinInt64(args ...interface{}) (int64, error) {
 	return m, nil
 }
 
-//获取当前终端的宽、高信息：字符数，非终端时（如IDE的执行环境）会报错
+// 获取当前终端的宽、高信息：字符数，非终端时（如IDE的执行环境）会报错
 func GetTerminalSize() (width, height int, err error) {
 	return terminal.GetSize(int(os.Stdout.Fd()))
 }
