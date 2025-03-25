@@ -28,6 +28,20 @@ func TestToCBD(t *testing.T) {
 	testEnd()
 }
 
+func TestCurPath(t *testing.T) {
+	fmt.Println(CurDir())
+	fmt.Println(CurPath())
+}
+
+func TestReadDirFiles(t *testing.T) {
+	d := "/Users/liuyongshuai/Downloads/rtest"
+	flist, err := ReadDirFiles(d)
+	fmt.Println(err)
+	for _, f := range flist {
+		fmt.Println(f)
+	}
+}
+
 func TestToDBC(t *testing.T) {
 	testStart()
 	str := "んエォサ６３1234567sdgs sdfgsａｂ。......ｃａ@￥@#%#ｓｄ我"

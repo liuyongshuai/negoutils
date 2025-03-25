@@ -11,6 +11,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 )
@@ -193,4 +194,121 @@ func FileModTime(filename string) (int64, error) {
 		return 0, err
 	}
 	return fileinfo.ModTime().Unix(), nil
+}
+
+// 按行遍历文件的每一行
+func FileLineIterator(f string, fn func(line string) error) error {
+	if !FileExists(f) {
+		return fmt.Errorf("file %s not exists", f)
+	}
+	fp, err := os.Open(f)
+	if err != nil {
+		return err
+	}
+	defer fp.Close()
+	rd := bufio.NewReader(fp)
+	var buf bytes.Buffer
+	total := 0
+	for {
+		//开始按行读取文件
+		line, isPrefix, err := rd.ReadLine()
+		buf.Write(line)
+		if !isPrefix && err == nil {
+			//如果回调函数报错则直接返回
+			if ferr := fn(buf.String()); ferr != nil {
+				return ferr
+			}
+			buf.Reset()
+			//校验数量
+			total++
+		}
+		//读取文件结束
+		if err == io.EOF {
+			break
+		}
+		//出错了，退出
+		if err != nil && err != io.EOF {
+			return err
+		}
+	}
+	return nil
+}
+
+// 读取目录下的所有文件
+func ReadDirFiles(dir string) (ret []string, err error) {
+	if !FileExists(dir) {
+		err = fmt.Errorf("dir %v not exists", dir)
+		return ret, err
+	}
+	dir = strings.TrimRight(dir, "/")
+
+	//开始读取目录
+	var dp *os.File
+	dp, err = os.Open(dir)
+	if err != nil {
+		return ret, err
+	}
+	if dp == nil {
+		err = fmt.Errorf("open %v failed", dir)
+		return ret, err
+	}
+
+	defer dp.Close()
+
+	var dlist []os.FileInfo
+	dlist, err = dp.Readdir(-1)
+	if err != nil {
+		return ret, err
+	}
+
+	//开始递归读取目录，忽略掉隐藏目录及文件
+	for _, v := range dlist {
+		if strings.HasPrefix(v.Name(), ".") {
+			continue
+		}
+		f := dir + "/" + v.Name()
+		if v.IsDir() {
+			tret, terr := ReadDirFiles(f)
+			if terr == nil && tret != nil && len(tret) > 0 {
+				ret = append(ret, tret...)
+			}
+		} else {
+			ret = append(ret, f)
+		}
+	}
+	ret = UniqueStrSlice(ret)
+	sort.Strings(ret)
+	return ret, nil
+}
+
+// 读取文件内容，按行返回
+func GetFileContentLines(filePath string) (lines []string, err error) {
+	err = FileLineIterator(filePath, func(line string) error {
+		lines = append(lines, line)
+		return nil
+	})
+	return
+}
+
+// 读取文件内容，按行返回
+func GetFileContentStr(filePath string) (str string, err error) {
+	var lines []string
+	err = FileLineIterator(filePath, func(line string) error {
+		lines = append(lines, line)
+		return nil
+	})
+	str = strings.Join(lines, "\n")
+	str = strings.TrimSpace(str)
+	return
+}
+
+// 当前路径
+func CurPath() string {
+	path, _ := filepath.Abs(os.Args[0])
+	return path
+}
+
+// 当前目录
+func CurDir() string {
+	return filepath.Dir(CurPath())
 }
