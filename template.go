@@ -139,13 +139,13 @@ func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) er
 		}
 		_, err = t.New(tplName).Parse(string(data))
 		if err != nil {
-			fmt.Println("Parse:", err)
+			fmt.Println("Parse:", err, "tplName:", tplName, "tplFile", tplFile)
 			return err
 		}
 	}
 	err = t.ExecuteTemplate(wr, name, data)
 	if err != nil {
-		fmt.Println("ExecuteTemplate:", err)
+		fmt.Println("ExecuteTemplate:", err, "name:", name, "data:", data)
 		return err
 	}
 	tb.TplCache[name] = t
