@@ -104,6 +104,7 @@ func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) er
 	if !tb.isHaveInit {
 		err := tb.initTplBuilder()
 		if err != nil {
+			fmt.Println("initTplBuilder:", err)
 			return err
 		}
 	}
@@ -114,6 +115,7 @@ func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) er
 	if t, ok := tb.TplCache[name]; ok {
 		err := t.ExecuteTemplate(wr, name, data)
 		if err != nil {
+			fmt.Println("Execute template err:", err)
 			return err
 		}
 		return nil
@@ -125,21 +127,25 @@ func (tb *TplBuilder) ExecuteTpl(wr io.Writer, name string, data interface{}) er
 	relatedFiles := make(map[string]string)
 	err := tb.getTplRelated(name, relatedFiles)
 	if err != nil {
+		fmt.Println("getTplRelated:", err)
 		return err
 	}
 	t := template.New(name).Funcs(tb.TplFuncMap)
 	for tplName, tplFile := range relatedFiles {
 		data, err := ioutil.ReadFile(tplFile)
 		if err != nil {
+			fmt.Println("ReadFile:", err)
 			return err
 		}
 		_, err = t.New(tplName).Parse(string(data))
 		if err != nil {
+			fmt.Println("Parse:", err)
 			return err
 		}
 	}
 	err = t.ExecuteTemplate(wr, name, data)
 	if err != nil {
+		fmt.Println("ExecuteTemplate:", err)
 		return err
 	}
 	tb.TplCache[name] = t
@@ -167,6 +173,7 @@ func (tb *TplBuilder) getAllTplFiles(tplDir ...string) error {
 		if !strings.HasSuffix(tplFile, tb.TplExt) {
 			continue
 		}
+		fmt.Println("fint TPL:\t", tplFile)
 		err := tb.parseTpl(tplFile)
 		if err != nil {
 			return err
@@ -177,6 +184,7 @@ func (tb *TplBuilder) getAllTplFiles(tplDir ...string) error {
 
 // 解析模板
 func (tb *TplBuilder) parseTpl(tplFile string) error {
+	fmt.Println("parseTpl", tplFile)
 	tn := tb.formatTplName(tplFile)
 	//将模板的内容完全读出来
 	data, err := ioutil.ReadFile(tplFile)
@@ -238,5 +246,6 @@ func (tb *TplBuilder) formatTplName(tname string) string {
 		tname = strings.TrimLeft(tname, "/")
 	}
 	tname = strings.TrimLeft(tname, pathSep)
+	fmt.Println("formatTplName=", tname)
 	return tname
 }
