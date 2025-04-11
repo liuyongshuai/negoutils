@@ -450,3 +450,15 @@ func TestByteToStr(t *testing.T) {
 	fmt.Printf("%# v\n", pretty.Formatter(a))
 	testEnd()
 }
+
+func TestParseUrl(t *testing.T) {
+	url := "http://ib.365yg.com/video/urls/v/1/toutiao/mp4/5494cda9784e4f60b04e4c0c6629da56"
+	m, e := ParseUrl(url, -1)
+	if e != nil {
+		fmt.Println(e)
+		t.Failed()
+	}
+	for k, v := range m {
+		fmt.Println(k, v)
+	}
+}
