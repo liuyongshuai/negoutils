@@ -24,7 +24,6 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -531,25 +530,25 @@ func (ehc *HttpClient) do(httpReq *http.Request) (resp *http.Response, err error
 	var body []byte
 	var nextBody io.ReadCloser
 	var retry int
-	var statusCode int
-
-	startTime := time.Now().UnixNano()
-	defer func() {
-		procTime := ProcTime(startTime, time.Now().UnixNano())
-		var status, errmsg, code string
-		if err == nil {
-			status = "success"
-			if statusCode != 0 {
-				code = strconv.Itoa(statusCode)
-			}
-		} else {
-			status = "failure"
-			code = "error"
-			errmsg = fmt.Sprintf("||errmsg=%v", err)
-		}
-		//每个http请求都会打印的一条日志信息
-		LogInfof("_HttpClient_%v||%v||proc_time=%f||code=%v%v", status, ehc.getComErrMsg(), procTime, code, errmsg)
-	}()
+	//var statusCode int
+	//
+	//startTime := time.Now().UnixNano()
+	//defer func() {
+	//	procTime := ProcTime(startTime, time.Now().UnixNano())
+	//	var status, errmsg, code string
+	//	if err == nil {
+	//		status = "success"
+	//		if statusCode != 0 {
+	//			code = strconv.Itoa(statusCode)
+	//		}
+	//	} else {
+	//		status = "failure"
+	//		code = "error"
+	//		errmsg = fmt.Sprintf("||errmsg=%v", err)
+	//	}
+	//	//每个http请求都会打印的一条日志信息
+	//	LogInfof("_HttpClient_%v||%v||proc_time=%f||code=%v%v", status, ehc.getComErrMsg(), procTime, code, errmsg)
+	//}()
 
 	//重试次数
 	totalRetryTimes := ehc.retry
@@ -627,9 +626,9 @@ func (ehc *HttpClient) do(httpReq *http.Request) (resp *http.Response, err error
 		break
 	}
 
-	if resp != nil {
-		statusCode = resp.StatusCode
-	}
+	//if resp != nil {
+	//	statusCode = resp.StatusCode
+	//}
 
 	if resp == nil && err == nil {
 		if totalRetryTimes > 0 {
